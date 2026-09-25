@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 
-public class Tile : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler
+public class Tile : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler,IPointerDownHandler
 {
     [SerializeField] private Color baseColour, offsetColour, hoverColour, highlightColour;
     [SerializeField] private SpriteRenderer renderer;
@@ -11,6 +11,10 @@ public class Tile : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler
     {
         offset = isOffset;
         renderer.color = isOffset ? offsetColour : baseColour;
+    }
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        Debug.Log(name);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
