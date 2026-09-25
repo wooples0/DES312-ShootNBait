@@ -1,0 +1,109 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &8736985079989245570
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1690414086082224083, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+      propertyPath: m_Color.b
+      value: 0.1509434
+      objectReference: {fileID: 0}
+    - target: {fileID: 1690414086082224083, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+      propertyPath: m_Color.g
+      value: 0.1509434
+      objectReference: {fileID: 0}
+    - target: {fileID: 1690414086082224083, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+      propertyPath: m_Color.r
+      value: 0.1509434
+      objectReference: {fileID: 0}
+    - target: {fileID: 3632141177756334752, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+      propertyPath: m_Name
+      value: Wall Tile
+      objectReference: {fileID: 0}
+    - target: {fileID: 5264612365306357372, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5264612365306357372, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5264612365306357372, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5264612365306357372, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5264612365306357372, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5264612365306357372, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5264612365306357372, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5264612365306357372, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5264612365306357372, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5264612365306357372, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7987784668837081430, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+      propertyPath: m_Name
+      value: Highlight
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3632141177756334752, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7883539262017628100}
+  m_SourcePrefab: {fileID: 100100000, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+--- !u!1 &1700758078351075284 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7987784668837081430, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+  m_PrefabInstance: {fileID: 8736985079989245570}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5415565957032160290 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3632141177756334752, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+  m_PrefabInstance: {fileID: 8736985079989245570}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7883539262017628100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5415565957032160290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f79e29871f7e3847b6e485fa7c9502f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WallTile
+  baseColour: {r: 0.15294118, g: 0.15294118, b: 0.15294118, a: 1}
+  offsetColour: {r: 0.13207549, g: 0.13207549, b: 0.13207549, a: 1}
+  renderer: {fileID: 7941410767169571153}
+  highlight: {fileID: 1700758078351075284}
+--- !u!212 &7941410767169571153 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 1690414086082224083, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+  m_PrefabInstance: {fileID: 8736985079989245570}
+  m_PrefabAsset: {fileID: 0}
