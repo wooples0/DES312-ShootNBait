@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1690414086082224083, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
       propertyPath: m_Color.b
-      value: 0.1509434
+      value: 0.16352195
       objectReference: {fileID: 0}
     - target: {fileID: 1690414086082224083, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
       propertyPath: m_Color.g
-      value: 0.1509434
+      value: 0.14752603
       objectReference: {fileID: 0}
     - target: {fileID: 1690414086082224083, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
       propertyPath: m_Color.r
-      value: 0.1509434
+      value: 0.1290692
       objectReference: {fileID: 0}
     - target: {fileID: 3632141177756334752, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
       propertyPath: m_Name
@@ -98,8 +98,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f79e29871f7e3847b6e485fa7c9502f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WallTile
-  baseColour: {r: 0.15294118, g: 0.15294118, b: 0.15294118, a: 1}
-  offsetColour: {r: 0.13207549, g: 0.13207549, b: 0.13207549, a: 1}
   renderer: {fileID: 7941410767169571153}
   highlight: {fileID: 1700758078351075284}
 --- !u!212 &7941410767169571153 stripped

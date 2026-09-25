@@ -1,7 +1,6 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class WallTile : Tile
+public class Enemy : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -13,14 +12,5 @@ public class WallTile : Tile
     void Update()
     {
         
-    }
-
-    public override void OnPointerEnter(PointerEventData eventData)
-    {
-
-    }
-    public override void OnPointerExit(PointerEventData eventData)
-    {
-
     }
 }

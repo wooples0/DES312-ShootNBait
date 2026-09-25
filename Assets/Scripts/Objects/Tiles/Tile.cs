@@ -2,23 +2,21 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 
-public class Tile : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler
+public abstract class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    [SerializeField] private Color baseColour, offsetColour;
-    [SerializeField] private SpriteRenderer renderer;
+    [SerializeField] protected SpriteRenderer renderer;
     [SerializeField] private GameObject highlight;
-    private bool offset;
-    public void Init(bool isOffset)
+
+    public virtual void Init(int x, int y)
     {
-        offset = isOffset;
-        renderer.color = isOffset ? offsetColour : baseColour;
+        
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
+    public virtual void OnPointerEnter(PointerEventData eventData)
     {
         highlight.SetActive(true);
     }
-    public void OnPointerExit(PointerEventData eventData)
+    public virtual void OnPointerExit(PointerEventData eventData)
     {
         highlight.SetActive(false);
         

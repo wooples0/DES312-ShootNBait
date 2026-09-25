@@ -3,17 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 public class GridManager : MonoBehaviour
 {
+    public static GridManager Instance;
     [SerializeField] private int width, height;
     [SerializeField] private Tile groundTile, wallTile;
     [SerializeField] private Transform cam;
     [SerializeField] private int[] map;
 
     private Dictionary<Vector2, Tile> tiles;
-    private void Start()
+
+    private void Awake()
     {
-        GenerateGrid();
+        Instance = this;
     }
-    private void GenerateGrid()
+
+    public void GenerateGrid()
     {
         tiles = new Dictionary<Vector2, Tile>();
         for(int x = 0; x < width; x++)
@@ -21,12 +24,25 @@ public class GridManager : MonoBehaviour
             for(int y = 0; y < height; y++)
             {
                 var i = x * width + y;
-                var iTile = map[i] == 0 ? groundTile: wallTile; 
+                var tileToSpawn = groundTile;
+                switch (i)
+                {
+                    
+                    case 0:
+                        tileToSpawn = groundTile;
+                        break;
+                    case 1:
+                        tileToSpawn = groundTile;
+                        break;
+                    case 2:
+                        tileToSpawn = wallTile;
+                        break;
+                }
 
-                var spawnedTile = Instantiate(iTile, new Vector3(x, y), Quaternion.identity);
+                var spawnedTile = Instantiate(tileToSpawn, new Vector3(x, y), Quaternion.identity);
                 spawnedTile.name = $"Tile {x} {y}";
-                var isOffset = (x + y) % 2 == 1;
-                spawnedTile.Init(isOffset);
+
+                spawnedTile.Init(x,y);
 
                 tiles[new Vector2(x, y)] = spawnedTile;
             }
@@ -34,6 +50,7 @@ public class GridManager : MonoBehaviour
 
         cam.transform.position = new Vector3((float)width/2-0.5f, (float)height/2-0.5f, (width+height)/2*-1);
 
+        GameManager.Instance.ChangeState(GameState.SpawnEnemies);
     }
 
     public Tile GetTileAtPosition(Vector2 pos)
