@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5264612365306357372}
   - component: {fileID: 1690414086082224083}
   - component: {fileID: 21620352881057003}
+  - component: {fileID: -34846503385030661}
   m_Layer: 0
   m_Name: Tile
   m_TagString: Untagged
@@ -107,4 +108,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Tile
   baseColour: {r: 0.28005216, g: 0.3741273, b: 0.5031446, a: 1}
   offsetColour: {r: 0.19514653, g: 0.29749614, b: 0.4339623, a: 1}
+  hoverColour: {r: 0.62040657, g: 0.63059723, b: 0.7987421, a: 1}
+  highlightColour: {r: 0.4136505, g: 0.42317867, b: 0.5597484, a: 1}
   renderer: {fileID: 1690414086082224083}
+--- !u!65 &-34846503385030661
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3632141177756334752}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 0.2}
+  m_Center: {x: 0, y: 0, z: 0}

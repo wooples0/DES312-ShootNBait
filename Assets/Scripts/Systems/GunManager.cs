@@ -7,7 +7,6 @@ public class GunManager : MonoBehaviour
     [SerializeField] private int ammo = 5;
     public void OnSwap(InputAction.CallbackContext ctx)
     {
-        Debug.Log("Swapping");
     }
 
     public void OnShoot(InputAction.CallbackContext ctx)
@@ -18,7 +17,6 @@ public class GunManager : MonoBehaviour
         }
         if (ctx.canceled)
         {
-            Debug.Log("Button lifted");
         }
     }
 
