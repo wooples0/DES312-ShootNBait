@@ -271,7 +271,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.PhysicsRaycaster
   m_EventMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 51
   m_MaxRayIntersections: 0
 --- !u!1 &331927216
 GameObject:
@@ -349,7 +349,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea6abcd1ee9ad194da75b6b732885f4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyManager
-  enemies: []
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -605,6 +604,14 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 683b0f0b-e90a-42d7-9125-c560a03f5500
     m_ActionName: 'Player/Swap[/Mouse/scroll/y]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e4c9326d-25b9-4b0a-bf80-6fe847fffbfc
+    m_ActionName: 'Player/Debug_SpawnEnemy[/Keyboard/1]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: fb84e4b9-d653-449a-9636-33d44f2c0d44
+    m_ActionName: Player/Reset
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -847,6 +854,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 074c7f2667496b64aa59f8309093393b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GunManager
+  equippedGun: 2
   activeItem: 0
   ammo: 5
 --- !u!1 &1758381669

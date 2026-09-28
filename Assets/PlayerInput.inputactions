@@ -77,17 +77,6 @@
                 },
                 {
                     "name": "",
-                    "id": "8b1b47f7-ce57-4337-866f-25acb0d35eca",
-                    "path": "<Mouse>/scroll/y",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Swap",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "0c461052-0f17-48d1-b426-dffeaca59fa4",
                     "path": "<Keyboard>/1",
                     "interactions": "",
@@ -105,6 +94,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Reset",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b89ae36a-1b16-4bd1-a213-e0f4a3b7859b",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Swap",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

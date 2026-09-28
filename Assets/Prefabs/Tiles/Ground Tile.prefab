@@ -103,7 +103,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26dc766fe62acb64a8b1c4c0e87e3adc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GroundTile
-  baseColour: {r: 0.63458717, g: 0.70258826, b: 0.76729554, a: 1}
-  offsetColour: {r: 0.51495194, g: 0.5709505, b: 0.6226415, a: 1}
   renderer: {fileID: 6709046391553888985}
   highlight: {fileID: 2644900886304308316}
+  highlight2: {fileID: 8953757241296801191}
+  baseColour: {r: 0.63458717, g: 0.70258826, b: 0.76729554, a: 1}
+  offsetColour: {r: 0.51495194, g: 0.5709505, b: 0.6226415, a: 1}
+--- !u!1 &8953757241296801191 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3903774560310460589, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+  m_PrefabInstance: {fileID: 5363466657451789578}
+  m_PrefabAsset: {fileID: 0}

@@ -98,8 +98,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f79e29871f7e3847b6e485fa7c9502f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WallTile
+  mousing: 0
   renderer: {fileID: 7941410767169571153}
   highlight: {fileID: 1700758078351075284}
+  highlight2: {fileID: 5723230582442726959}
+--- !u!1 &5723230582442726959 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3903774560310460589, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+  m_PrefabInstance: {fileID: 8736985079989245570}
+  m_PrefabAsset: {fileID: 0}
 --- !u!212 &7941410767169571153 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 1690414086082224083, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
