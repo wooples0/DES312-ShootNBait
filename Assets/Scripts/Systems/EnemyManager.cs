@@ -31,23 +31,38 @@ public class EnemyManager : MonoBehaviour
         spawnedEnemies.Add(spawnedEnemy.GetComponent<BaseEnemy>());
     }
 
-    public void SetEnemiesOnTiles(Tile[] tiles)
+    public void SpawnNextWave()
+    {
+        for(int i = 0; i < 10; i++)
+        {
+            SpawnEnemy(0);
+        }
+
+        GameManager.Instance.ChangeState(GameState.PlayerPhase);
+    }
+
+    public void SetEnemiesOnTiles(Tile targetTile, Tile[] highlightedTiles)
     {
         
     }
 
     public void OnDebug_SpawnEnemy(InputAction.CallbackContext ctx)
     {
-        if (ctx.started)
-        {
-            SpawnEnemy(0);
-            foreach(BaseEnemy enemy in spawnedEnemies)
-            {
-                var randomTile = GridManager.Instance.GetRandomTile();
-                enemy.SetTargetTile(randomTile);
-            }
-        }
+        if (!ctx.started) { return; }
+        SpawnEnemy(0);
 
     }
+
+    public void OnDebug_MoveAllEnemies(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.started) { return; }
+        foreach (BaseEnemy enemy in spawnedEnemies)
+        {
+            var randomTile = GridManager.Instance.GetRandomTile();
+            enemy.SetTargetTile(randomTile);
+        }
+    }
+
+    
 
 }

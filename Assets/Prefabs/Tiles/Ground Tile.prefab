@@ -69,7 +69,9 @@ PrefabInstance:
       value: Highlight
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 2804114326197476135, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+    - {fileID: 1859824672921014727, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 3632141177756334752, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
@@ -120,6 +122,8 @@ MonoBehaviour:
   highlight2: {fileID: 8953757241296801191}
   positionLabel: {fileID: 4462127372850807559}
   countLabel: {fileID: 8712731184948797949}
+  gunHighlightColour1: {r: 1, g: 0, b: 0, a: 0.5882353}
+  gunHighlightColour2: {r: 1, g: 1, b: 1, a: 0.5882353}
   enemiesOnTile: []
   IsWalkable: 1
   baseColour: {r: 0.63458717, g: 0.70258826, b: 0.76729554, a: 1}

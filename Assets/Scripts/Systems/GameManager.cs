@@ -30,8 +30,8 @@ public class GameManager : MonoBehaviour
                 GridManager.Instance.GenerateGrid();
                 break;
             case GameState.SpawnEnemies:
+                EnemyManager.Instance.SpawnNextWave();
                 Debug.Log("Spawn Enemies");
-                ChangeState(GameState.PlayerPhase);
                 break;
             case GameState.PlayerPhase:
                 Debug.Log("Player Phase");

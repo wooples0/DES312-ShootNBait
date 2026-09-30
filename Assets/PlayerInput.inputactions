@@ -25,7 +25,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Swap",
+                    "name": "SwapBait",
                     "type": "Value",
                     "id": "683b0f0b-e90a-42d7-9125-c560a03f5500",
                     "expectedControlType": "Axis",
@@ -43,9 +43,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Reset",
+                    "name": "Debug_MoveAllEnemies",
                     "type": "Button",
                     "id": "fb84e4b9-d653-449a-9636-33d44f2c0d44",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "EquipGun",
+                    "type": "Button",
+                    "id": "675bb3a2-a708-4401-a8ed-883055b37bca",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -78,7 +87,7 @@
                 {
                     "name": "",
                     "id": "0c461052-0f17-48d1-b426-dffeaca59fa4",
-                    "path": "<Keyboard>/1",
+                    "path": "<Keyboard>/0",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -89,11 +98,11 @@
                 {
                     "name": "",
                     "id": "2dddeb59-974d-4345-ae44-851379fbf873",
-                    "path": "",
+                    "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Reset",
+                    "action": "Debug_MoveAllEnemies",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -104,7 +113,29 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Swap",
+                    "action": "SwapBait",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3ca7b577-c096-435f-a88e-ce96a1815008",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwapBait",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9bec40c1-4920-4e41-bd91-8a119d79864a",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "EquipGun",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

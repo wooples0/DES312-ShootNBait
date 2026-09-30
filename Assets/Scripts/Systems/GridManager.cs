@@ -11,9 +11,7 @@ public class GridManager : MonoBehaviour
     [SerializeField] private Transform cam;
     [SerializeField] private int[] map;
 
-    [SerializeField] public Dictionary<Vector2, Tile> tiles = new Dictionary<Vector2, Tile>();
-
-    public List<Vector2> tilePosList;
+    private Dictionary<Vector2, Tile> tiles = new Dictionary<Vector2, Tile>();
 
     private void Awake()
     {
@@ -21,7 +19,6 @@ public class GridManager : MonoBehaviour
     }
     private void Start()
     {
-        tilePosList.Add(new Vector2(0, 0));
 
     }
     private void Update()
@@ -32,21 +29,23 @@ public class GridManager : MonoBehaviour
     private void UpdateTileHighlights()
     {
         ClearAllTileHighlights();
-
+        if (GameManager.Instance.GameState != GameState.PlayerPhase) { return; }
         var targetTile = GunManager.Instance.targetTile;
         GunManager.Instance.targetedTiles.Clear();
         if(targetTile == null)
         { 
             return; 
         }
-        switch (GunManager.Instance.equippedGun)
+        if (GunManager.Instance.isGunEquipped)
         {
-            
-            case GunManager.GunTypes.Gun:
-                targetTile.SetHighlight(0, true);
-                GunManager.Instance.targetedTiles.Add(targetTile);
-                break;
-            case GunManager.GunTypes.Bait1:
+            targetTile.SetHighlight(0, true);
+            GunManager.Instance.targetedTiles.Add(targetTile);
+            return;
+        }
+        
+        switch (GunManager.Instance.equippedBait)
+        {
+            case GunManager.BaitType.Vertical:
                 targetTile.SetHighlight(0, true);
                 foreach (Tile tile in GetTilesInColumn(new Vector2((int)targetTile.transform.position.x, (int)targetTile.transform.position.y)))
                 {
@@ -57,7 +56,7 @@ public class GridManager : MonoBehaviour
                     }
                 }
                 break;
-            case GunManager.GunTypes.Bait2:
+            case GunManager.BaitType.Horizontal:
                 targetTile.SetHighlight(0, true);
                 foreach (Tile tile in GetTilesInRow(new Vector2((int)targetTile.transform.position.x, (int)targetTile.transform.position.y)))
                 {
@@ -67,6 +66,9 @@ public class GridManager : MonoBehaviour
                         tile.SetHighlight(1, true);
                     }
                 }
+                break;
+            default:
+                Debug.Log("Not written yet");
                 break;
         }
 
@@ -80,22 +82,16 @@ public class GridManager : MonoBehaviour
             for(int y = 0; y < height; y++)
             {
                 var i = x * width + y;
-                var tileToSpawn = groundTile;
-                switch (i)
-                {
+                //var tileToSpawn = groundTile;
+                //switch (i)
+                //{
                     
-                    case 0:
-                        tileToSpawn = groundTile;
-                        break;
-                    case 1:
-                        tileToSpawn = groundTile;
-                        break;
-                    case 2:
-                        tileToSpawn = groundTile;
-                        break;
-                }
+                //    case 0:
+                //        tileToSpawn = groundTile;
+                //        break;
+                //}
 
-                var spawnedTile = Instantiate(tileToSpawn, new Vector3(x, y), Quaternion.identity);
+                var spawnedTile = Instantiate(groundTile, new Vector3(x, y), Quaternion.identity);
                 spawnedTile.name = $"Tile {x} {y}";
 
                 spawnedTile.Init(x,y);
@@ -147,6 +143,19 @@ public class GridManager : MonoBehaviour
             }
             return rowTiles;
         }
+        return null;
+    }
+
+    public List<Tile> GetTilesInDiagonalRight(Vector2 pos)
+    {
+        List<Tile> diagonalTiles = new List<Tile>();
+        return null;
+    }
+
+    public List<Tile> GetTilesInDiagonalLeft(Vector2 pos)
+    {
+        List<Tile> diagonalTiles = new List<Tile>();
+
         return null;
     }
    

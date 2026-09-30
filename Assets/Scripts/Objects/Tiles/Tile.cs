@@ -13,6 +13,8 @@ public abstract class Tile : MonoBehaviour, IPointerMoveHandler, IPointerExitHan
     [SerializeField] protected TMP_Text positionLabel;
     [SerializeField] protected TMP_Text countLabel;
 
+    [SerializeField] protected Color gunHighlightColour1, gunHighlightColour2;
+
     [SerializeField] private List<BaseEnemy> enemiesOnTile = new List<BaseEnemy>();
     [SerializeField] private bool IsWalkable;
     public bool Walkable => IsWalkable;
@@ -89,9 +91,11 @@ public abstract class Tile : MonoBehaviour, IPointerMoveHandler, IPointerExitHan
         {
             case 0:
                 highlight.SetActive(set);
+                highlight.GetComponent<SpriteRenderer>().color = gunHighlightColour1;
                 break;
             case 1:
-                highlight2.SetActive(set); 
+                highlight2.SetActive(set);
+                highlight.GetComponent<SpriteRenderer>().color = gunHighlightColour2;
                 break;
         }
     }

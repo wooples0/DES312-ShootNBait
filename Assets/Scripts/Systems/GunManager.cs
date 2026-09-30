@@ -7,10 +7,9 @@ using UnityEngine.InputSystem;
 public class GunManager : MonoBehaviour
 {
     public static GunManager Instance;
-    public GunTypes equippedGun;
+    public bool isGunEquipped;
+    public BaitType equippedBait;
     public Tile targetTile;
-    [SerializeField] private int activeItem = 0;
-    [SerializeField] private int ammo = 5;
 
     public List<Tile> targetedTiles = new List<Tile>();
 
@@ -20,36 +19,71 @@ public class GunManager : MonoBehaviour
     }
     private void Start()
     {
-        equippedGun = GunTypes.Gun;
+        isGunEquipped = true;
     }
-    
-    public void OnSwap(InputAction.CallbackContext ctx)
+    public void OnEquipGun(InputAction.CallbackContext ctx)
     {
+        if (GameManager.Instance.GameState != GameState.PlayerPhase) { return; }
         if (!ctx.started) { return; }
-        GridManager.Instance.ClearAllTileHighlights();
-        switch (equippedGun)
+        if (isGunEquipped) { return; }
+
+        isGunEquipped = true;
+        //Do toher visual stuff
+    }
+    public void OnSwapBait(InputAction.CallbackContext ctx)
+    {
+        if (GameManager.Instance.GameState != GameState.PlayerPhase) { return; }
+        if (!ctx.started) { return; }
+        if (isGunEquipped)
         {
-            case GunTypes.Gun:
-                equippedGun = GunTypes.Bait1;
+            isGunEquipped = false;
+            return;
+        }
+        GridManager.Instance.ClearAllTileHighlights();
+        switch (equippedBait)
+        {
+            case BaitType.Vertical:
+                equippedBait = BaitType.Horizontal;
                 break;
-            case GunTypes.Bait1:
-                equippedGun = GunTypes.Bait2;
-                break;
-            case GunTypes.Bait2:
-                equippedGun = GunTypes.Gun;
+            case BaitType.Horizontal:
+                equippedBait = BaitType.Vertical;
                 break;
         }
+
+
     }
 
     public void OnShoot(InputAction.CallbackContext ctx)
     {
-        if (ctx.started)
+        if (GameManager.Instance.GameState != GameState.PlayerPhase) { return; }
+        if (!ctx.started) { return; }
+        
+        if (isGunEquipped)
         {
-
+            //Shoot gun at tile, score based on how many enemies on tile (get diagonal charges if you get all enemies in a wave in one shot?)
         }
-        if (ctx.canceled)
+        else
         {
-
+            foreach(BaseEnemy enemy in EnemyManager.Instance.spawnedEnemies)
+            {
+                Debug.Log($"{enemy.name} target tile being set to {targetTile}");
+                enemy.SetTargetTile(targetTile);
+            }
+            //switch (equippedBait)
+            //{
+            //    case BaitType.Horizontal:
+            //        //Pull enemies in horizontal line
+            //        break;
+            //    case BaitType.Vertical:
+            //        //pull enemies in vertical line
+            //        break;
+            //    case BaitType.BaitDiagonalL:
+            //        //Pull enemies in line rotated 45 degrees
+            //        break;
+            //    case BaitType.BaitDiagonalR:
+            //        //pull enemies in line rotated 45 degrees
+            //        break;
+            //}
         }
     }
 
@@ -58,10 +92,11 @@ public class GunManager : MonoBehaviour
 
     }
 
-    public enum GunTypes
+    public enum BaitType
     {
-        Gun = 0,
-        Bait1 = 1,
-        Bait2 = 2,
+        Horizontal = 0,
+        Vertical = 1,
+        BaitDiagonalR = 2,
+        BaitDiagonalL = 3
     }
 }
