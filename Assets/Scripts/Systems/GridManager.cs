@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+
 public class GridManager : MonoBehaviour
 {
     public static GridManager Instance;
@@ -9,11 +11,18 @@ public class GridManager : MonoBehaviour
     [SerializeField] private Transform cam;
     [SerializeField] private int[] map;
 
-    private Dictionary<Vector2, Tile> tiles;
+    [SerializeField] public Dictionary<Vector2, Tile> tiles = new Dictionary<Vector2, Tile>();
+
+    public List<Vector2> tilePosList;
 
     private void Awake()
     {
         Instance = this;
+    }
+    private void Start()
+    {
+        tilePosList.Add(new Vector2(0, 0));
+
     }
     private void Update()
     {
@@ -23,7 +32,9 @@ public class GridManager : MonoBehaviour
     private void UpdateTileHighlights()
     {
         ClearAllTileHighlights();
+
         var targetTile = GunManager.Instance.targetTile;
+        GunManager.Instance.targetedTiles.Clear();
         if(targetTile == null)
         { 
             return; 
@@ -33,23 +44,26 @@ public class GridManager : MonoBehaviour
             
             case GunManager.GunTypes.Gun:
                 targetTile.SetHighlight(0, true);
+                GunManager.Instance.targetedTiles.Add(targetTile);
                 break;
             case GunManager.GunTypes.Bait1:
                 targetTile.SetHighlight(0, true);
-                foreach (Tile tile in GetTilesInColumn(targetTile.GetXY()))
+                foreach (Tile tile in GetTilesInColumn(new Vector2((int)targetTile.transform.position.x, (int)targetTile.transform.position.y)))
                 {
                     if (tile.TryGetComponent<GroundTile>(out var ground))
                     {
+                        GunManager.Instance.targetedTiles.Add(ground);
                         tile.SetHighlight(1, true);
                     }
                 }
                 break;
             case GunManager.GunTypes.Bait2:
                 targetTile.SetHighlight(0, true);
-                foreach (Tile tile in GetTilesInRow(targetTile.GetXY()))
+                foreach (Tile tile in GetTilesInRow(new Vector2((int)targetTile.transform.position.x, (int)targetTile.transform.position.y)))
                 {
                     if (tile.TryGetComponent<GroundTile>(out var ground))
                     {
+                        GunManager.Instance.targetedTiles.Add(ground);
                         tile.SetHighlight(1, true);
                     }
                 }
@@ -61,7 +75,6 @@ public class GridManager : MonoBehaviour
 
     public void GenerateGrid()
     {
-        tiles = new Dictionary<Vector2, Tile>();
         for(int x = 0; x < width; x++)
         {
             for(int y = 0; y < height; y++)
@@ -78,7 +91,7 @@ public class GridManager : MonoBehaviour
                         tileToSpawn = groundTile;
                         break;
                     case 2:
-                        tileToSpawn = wallTile;
+                        tileToSpawn = groundTile;
                         break;
                 }
 
@@ -87,18 +100,22 @@ public class GridManager : MonoBehaviour
 
                 spawnedTile.Init(x,y);
 
-                tiles[new Vector2(x, y)] = spawnedTile;
+                tiles[new Vector2((int)x, (int)y)] = spawnedTile;
             }
         }
 
         cam.transform.position = new Vector3((float)width/2-0.5f, (float)height/2-0.5f, (width+height)/2*-1);
-
         GameManager.Instance.ChangeState(GameState.SpawnEnemies);
     }
 
     public Tile GetTileAtPosition(Vector2 pos)
     {
-        if(tiles.TryGetValue(pos, out var tile)) { return tile; } else { return null; }
+        if(tiles.TryGetValue(pos, out var tile))
+        {
+            return tile;
+        }
+        return null;
+        
     }
 
     public Tile[] GetTilesInColumn(Vector2 pos)
@@ -109,7 +126,7 @@ public class GridManager : MonoBehaviour
         {
             for(int i = 0; i < height; i++)
             {
-                var indexTile = GetTileAtPosition(new Vector2(pos.x, i));
+                var indexTile = GetTileAtPosition(new Vector2((int)pos.x, i));
                 columnTiles[i] = indexTile;
             }
             return columnTiles;
@@ -125,18 +142,14 @@ public class GridManager : MonoBehaviour
         {
             for (int i = 0; i < height; i++)
             {
-                var indexTile = GetTileAtPosition(new Vector2(i, pos.y));
+                var indexTile = GetTileAtPosition(new Vector2(i, (int)pos.y));
                 rowTiles[i] = indexTile;
             }
             return rowTiles;
         }
         return null;
     }
-    
-    public Tile[] GetTilesBetween(Vector2 pos1, Vector2 pos2)
-    {
-        return null;
-    }
+   
 
     public void ClearAllTileHighlights()
     {
@@ -149,4 +162,11 @@ public class GridManager : MonoBehaviour
             
         }
     }
+
+    public Tile GetRandomTile()
+    {
+        var randomPos = new Vector2(Random.Range(0, width - 1), Random.Range(0, height - 1));
+        return GetTileAtPosition(randomPos);
+    }
+
 }

@@ -24,6 +24,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wall Tile
       objectReference: {fileID: 0}
+    - target: {fileID: 3640890213272104183, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+      propertyPath: m_fontColor.a
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3640890213272104183, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 855638271
+      objectReference: {fileID: 0}
     - target: {fileID: 5264612365306357372, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -75,7 +83,21 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3632141177756334752, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7883539262017628100}
+    - targetCorrespondingSourceObject: {fileID: 393091234615351371, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8370884464232991654}
   m_SourcePrefab: {fileID: 100100000, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+--- !u!114 &1063540098238552207 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8611574863561297421, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+  m_PrefabInstance: {fileID: 8736985079989245570}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &1700758078351075284 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7987784668837081430, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
@@ -102,6 +124,21 @@ MonoBehaviour:
   renderer: {fileID: 7941410767169571153}
   highlight: {fileID: 1700758078351075284}
   highlight2: {fileID: 5723230582442726959}
+  positionLabel: {fileID: 1063540098238552207}
+  countLabel: {fileID: 5460346233273072245}
+  enemiesOnTile: []
+  IsWalkable: 0
+--- !u!114 &5460346233273072245 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3640890213272104183, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+  m_PrefabInstance: {fileID: 8736985079989245570}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8949932046025019081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &5723230582442726959 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3903774560310460589, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
@@ -112,3 +149,23 @@ SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 1690414086082224083, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
   m_PrefabInstance: {fileID: 8736985079989245570}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &8949932046025019081 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 393091234615351371, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+  m_PrefabInstance: {fileID: 8736985079989245570}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8370884464232991654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8949932046025019081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75c0794b8f0a619419dc11b701be2830, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  baseColour: {r: 0, g: 0, b: 0, a: 0}
+  secondaryColour: {r: 0, g: 0, b: 0, a: 0}
+  labelText: {fileID: 0}

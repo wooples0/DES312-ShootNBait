@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c02efd74e112604f8b0d53ed7a87bf6, type: 3}
   m_Name: Enemy1
   m_EditorClassIdentifier: Assembly-CSharp::ScriptableEnemy
-  enemyPrefab: {fileID: 582012058923559996, guid: f01e3dc99c05bba40a8c041072fa05e5, type: 3}
+  enemyPrefab: {fileID: 7314560896546432216, guid: f01e3dc99c05bba40a8c041072fa05e5, type: 3}

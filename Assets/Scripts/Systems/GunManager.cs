@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
 
 public class GunManager : MonoBehaviour
 {
@@ -9,6 +11,8 @@ public class GunManager : MonoBehaviour
     public Tile targetTile;
     [SerializeField] private int activeItem = 0;
     [SerializeField] private int ammo = 5;
+
+    public List<Tile> targetedTiles = new List<Tile>();
 
     private void Awake()
     {
@@ -45,6 +49,7 @@ public class GunManager : MonoBehaviour
         }
         if (ctx.canceled)
         {
+
         }
     }
 

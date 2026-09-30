@@ -81,6 +81,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7987784668837081430, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
   m_PrefabInstance: {fileID: 5363466657451789578}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4462127372850807559 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8611574863561297421, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+  m_PrefabInstance: {fileID: 5363466657451789578}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!212 &6709046391553888985 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 1690414086082224083, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
@@ -103,11 +114,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26dc766fe62acb64a8b1c4c0e87e3adc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GroundTile
+  mousing: 0
   renderer: {fileID: 6709046391553888985}
   highlight: {fileID: 2644900886304308316}
   highlight2: {fileID: 8953757241296801191}
+  positionLabel: {fileID: 4462127372850807559}
+  countLabel: {fileID: 8712731184948797949}
+  enemiesOnTile: []
+  IsWalkable: 1
   baseColour: {r: 0.63458717, g: 0.70258826, b: 0.76729554, a: 1}
   offsetColour: {r: 0.51495194, g: 0.5709505, b: 0.6226415, a: 1}
+--- !u!114 &8712731184948797949 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3640890213272104183, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+  m_PrefabInstance: {fileID: 5363466657451789578}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &8953757241296801191 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3903774560310460589, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
