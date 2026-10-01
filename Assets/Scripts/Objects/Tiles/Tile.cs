@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using TMPro;
 
-public abstract class Tile : MonoBehaviour, IPointerMoveHandler, IPointerExitHandler
+public abstract class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public bool mousing;
     [SerializeField] protected SpriteRenderer renderer;
@@ -28,10 +28,11 @@ public abstract class Tile : MonoBehaviour, IPointerMoveHandler, IPointerExitHan
     {
     }
 
-    public virtual void OnPointerMove(PointerEventData eventData)
+    public virtual void OnPointerEnter(PointerEventData eventData)
     {
         GunManager.Instance.targetTile = this;
-        SetHighlight(0, true);
+        GridManager.Instance.UpdateTileHighlights();
+
 
     }
     public virtual void OnPointerExit(PointerEventData eventData)
@@ -40,7 +41,7 @@ public abstract class Tile : MonoBehaviour, IPointerMoveHandler, IPointerExitHan
         {
             GunManager.Instance.targetTile = null;
         }
-        SetHighlight(0, false);
+        GridManager.Instance.UpdateTileHighlights();
     }
 
     public Vector2 GetPosition()

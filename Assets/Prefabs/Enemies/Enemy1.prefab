@@ -107,7 +107,7 @@ MonoBehaviour:
   currentTile: {fileID: 0}
   targetTile: {fileID: 0}
   enemyState: 0
-  walkSpeed: 10
+  walkSpeed: 20
 --- !u!136 &7801217368336597282
 CapsuleCollider:
   m_ObjectHideFlags: 0

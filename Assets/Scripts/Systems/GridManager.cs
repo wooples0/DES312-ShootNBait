@@ -24,10 +24,10 @@ public class GridManager : MonoBehaviour
     }
     private void Update()
     {
-        UpdateTileHighlights();
+        //UpdateTileHighlights();
     }
     
-    private void UpdateTileHighlights()
+    public void UpdateTileHighlights()
     {
         ClearAllTileHighlights();
         if (GameManager.Instance.GameState != GameState.PlayerPhase) { return; }
@@ -64,12 +64,21 @@ public class GridManager : MonoBehaviour
                     if (tile.TryGetComponent<GroundTile>(out var ground))
                     {
                         GunManager.Instance.targetedTiles.Add(ground);
+
                         tile.SetHighlight(1, true);
                     }
                 }
                 break;
-            default:
-                Debug.Log("Not written yet");
+            case GunManager.BaitType.DiagonalR:
+                targetTile.SetHighlight(0, true);
+                foreach (Tile tile in GetTilesInDiagonalRight(new Vector2((int)targetTile.transform.position.x, (int)targetTile.transform.position.y)))
+                {
+                    if (tile.TryGetComponent<GroundTile>(out var ground))
+                    {
+                        GunManager.Instance.targetedTiles.Add(ground);
+                        tile.SetHighlight(1, true);
+                    }
+                }
                 break;
         }
 
@@ -99,12 +108,10 @@ public class GridManager : MonoBehaviour
                 spawnedTile.Init(x,y);
 
                 tiles[new Vector2((int)x, (int)y)] = spawnedTile;
-                yield return new WaitForSeconds(0.025f);
+                yield return new WaitForSeconds(0.0005f);
             }
         }
 
-        
-        yield return new WaitForSeconds(1f);
         GameManager.Instance.ChangeState(GameState.SpawnEnemies);
         yield return null;
     }
@@ -153,8 +160,28 @@ public class GridManager : MonoBehaviour
 
     public List<Tile> GetTilesInDiagonalRight(Vector2 pos)
     {
-        List<Tile> diagonalTiles = new List<Tile>();
+        
 
+        if(tiles.TryGetValue(pos, out var tile))
+        {
+            List<Tile> diagonalTiles = new List<Tile>();
+
+            for(int y = (int)pos.y ; y < height-1; y++)
+            {
+                for(int x = (int)pos.x; x < width-1; x++)
+                {
+                    if(tiles.TryGetValue(new Vector2(x, y), out var tileToAdd))
+                    {
+                        Debug.Log($"Adding tile {tileToAdd.name} to the list");
+                        diagonalTiles.Add(tileToAdd);
+                    }
+                    else
+                    {
+                        return diagonalTiles;
+                    }
+                }
+            }
+        }
         return null;
     }
 
@@ -171,9 +198,9 @@ public class GridManager : MonoBehaviour
         highlightedTiles.Clear();
         foreach(var tile in tiles.Values)
         {
-            if(tile.TryGetComponent<GroundTile>(out var tile2)){
-                tile2.SetHighlight(0, false);
-                tile2.SetHighlight(1, false);
+            if(tile.TryGetComponent<GroundTile>(out var groundTile)){
+                groundTile.SetHighlight(0, false);
+                groundTile.SetHighlight(1, false);
             }
             
         }

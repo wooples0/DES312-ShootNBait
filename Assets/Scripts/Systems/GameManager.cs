@@ -34,9 +34,11 @@ public class GameManager : MonoBehaviour
                 Debug.Log("Spawn Enemies");
                 break;
             case GameState.PlayerPhase:
+                GridManager.Instance.UpdateTileHighlights();
                 Debug.Log("Player Phase");
                 break;
             case GameState.MovePhase:
+                GridManager.Instance.UpdateTileHighlights();
                 Debug.Log("Move Phase");
                 break;
             case GameState.ShootPhase:

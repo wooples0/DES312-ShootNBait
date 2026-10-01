@@ -23,6 +23,7 @@ public class GunManager : MonoBehaviour
     }
     public void OnEquipGun(InputAction.CallbackContext ctx)
     {
+        GridManager.Instance.UpdateTileHighlights();
         if (GameManager.Instance.GameState != GameState.PlayerPhase) { return; }
         if (!ctx.started) { return; }
         if (isGunEquipped) { return; }
@@ -34,19 +35,21 @@ public class GunManager : MonoBehaviour
     {
         if (GameManager.Instance.GameState != GameState.PlayerPhase) { return; }
         if (!ctx.started) { return; }
+        
         if (isGunEquipped)
         {
             isGunEquipped = false;
-            return;
         }
-        GridManager.Instance.ClearAllTileHighlights();
+        
         switch (equippedBait)
         {
             case BaitType.Vertical:
                 equippedBait = BaitType.Horizontal;
+                GridManager.Instance.UpdateTileHighlights();
                 break;
             case BaitType.Horizontal:
                 equippedBait = BaitType.Vertical;
+                GridManager.Instance.UpdateTileHighlights();
                 break;
         }
 
@@ -92,7 +95,7 @@ public class GunManager : MonoBehaviour
     {
         Horizontal = 0,
         Vertical = 1,
-        BaitDiagonalR = 2,
-        BaitDiagonalL = 3
+        DiagonalR = 2,
+        DiagonalL = 3
     }
 }

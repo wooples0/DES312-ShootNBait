@@ -14,7 +14,7 @@ public class WallTile : Tile
         
     }
 
-    public override void OnPointerMove(PointerEventData eventData)
+    public override void OnPointerEnter(PointerEventData eventData)
     {
 
     }

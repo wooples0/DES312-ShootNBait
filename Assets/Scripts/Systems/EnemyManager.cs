@@ -38,16 +38,14 @@ public class EnemyManager : MonoBehaviour
         for(int i = 0; i < 10; i++)
         {
             SpawnEnemy(0);
-            yield return new WaitForSeconds(0.025f);
+            yield return new WaitForSeconds(0.005f);
         }
-        yield return new WaitForSeconds(1f);
         GameManager.Instance.ChangeState(GameState.PlayerPhase);
         yield return null;
     }
 
     public IEnumerator SetEnemiesOnTiles(Tile targetTile, List<Tile> highlightedTiles)
     {
-        GameManager.Instance.ChangeState(GameState.MovePhase);
         List<BaseEnemy> enemiesToMove = new List<BaseEnemy>();
         foreach(BaseEnemy enemy in spawnedEnemies)
         {
@@ -59,6 +57,11 @@ public class EnemyManager : MonoBehaviour
                     enemiesToMove.Add(enemy);
                 }
             }
+        }
+        if(enemiesToMove.Count == 0)
+        {
+            GameManager.Instance.ChangeState(GameState.PlayerPhase);
+            yield break;
         }
         var allEnemiesMoved = false;
         while (!allEnemiesMoved)
