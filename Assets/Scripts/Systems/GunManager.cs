@@ -60,30 +60,26 @@ public class GunManager : MonoBehaviour
         
         if (isGunEquipped)
         {
-            //Shoot gun at tile, score based on how many enemies on tile (get diagonal charges if you get all enemies in a wave in one shot?)
+            GameManager.Instance.ChangeState(GameState.ShootPhase);
         }
         else
         {
-            foreach(BaseEnemy enemy in EnemyManager.Instance.spawnedEnemies)
-            {
-                Debug.Log($"{enemy.name} target tile being set to {targetTile}");
-                enemy.SetTargetTile(targetTile);
-            }
-            //switch (equippedBait)
+            //foreach(BaseEnemy enemy in EnemyManager.Instance.spawnedEnemies)
             //{
-            //    case BaitType.Horizontal:
-            //        //Pull enemies in horizontal line
-            //        break;
-            //    case BaitType.Vertical:
-            //        //pull enemies in vertical line
-            //        break;
-            //    case BaitType.BaitDiagonalL:
-            //        //Pull enemies in line rotated 45 degrees
-            //        break;
-            //    case BaitType.BaitDiagonalR:
-            //        //pull enemies in line rotated 45 degrees
-            //        break;
+            //    Debug.Log($"{enemy.name} target tile being set to {targetTile}");
+            //    enemy.SetTargetTile(targetTile);
             //}
+            GameManager.Instance.ChangeState(GameState.MovePhase);
+            switch (equippedBait)
+            {
+                
+                case BaitType.Horizontal:
+                    StartCoroutine(EnemyManager.Instance.SetEnemiesOnTiles(targetTile, targetedTiles));
+                    break;
+                case BaitType.Vertical:
+                    StartCoroutine(EnemyManager.Instance.SetEnemiesOnTiles(targetTile, targetedTiles));
+                    break;
+            }
         }
     }
 

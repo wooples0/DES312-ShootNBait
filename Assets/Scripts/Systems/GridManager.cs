@@ -12,6 +12,7 @@ public class GridManager : MonoBehaviour
     [SerializeField] private int[] map;
 
     private Dictionary<Vector2, Tile> tiles = new Dictionary<Vector2, Tile>();
+    private List<Tile> highlightedTiles = new List<Tile>();
 
     private void Awake()
     {
@@ -75,9 +76,10 @@ public class GridManager : MonoBehaviour
 
     }
 
-    public void GenerateGrid()
+    public IEnumerator GenerateGrid()
     {
-        for(int x = 0; x < width; x++)
+        cam.transform.position = new Vector3((float)width / 2 - 0.5f, (float)height / 2 - 0.5f, (width + height) / 2 * -1);
+        for (int x = 0; x < width; x++)
         {
             for(int y = 0; y < height; y++)
             {
@@ -97,11 +99,14 @@ public class GridManager : MonoBehaviour
                 spawnedTile.Init(x,y);
 
                 tiles[new Vector2((int)x, (int)y)] = spawnedTile;
+                yield return new WaitForSeconds(0.025f);
             }
         }
 
-        cam.transform.position = new Vector3((float)width/2-0.5f, (float)height/2-0.5f, (width+height)/2*-1);
+        
+        yield return new WaitForSeconds(1f);
         GameManager.Instance.ChangeState(GameState.SpawnEnemies);
+        yield return null;
     }
 
     public Tile GetTileAtPosition(Vector2 pos)
@@ -149,6 +154,7 @@ public class GridManager : MonoBehaviour
     public List<Tile> GetTilesInDiagonalRight(Vector2 pos)
     {
         List<Tile> diagonalTiles = new List<Tile>();
+
         return null;
     }
 
@@ -162,6 +168,7 @@ public class GridManager : MonoBehaviour
 
     public void ClearAllTileHighlights()
     {
+        highlightedTiles.Clear();
         foreach(var tile in tiles.Values)
         {
             if(tile.TryGetComponent<GroundTile>(out var tile2)){

@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     public TMP_Text equippedGunText;
     public TMP_Text equippedBaitText;
     public TMP_Text targetTileText;
+    public TMP_Text gameStateText;
     public Color equippedBaitTextColour1, equippedBaitTextColour2, equippedGunTextColour1, equippedGunTextColour2;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -28,6 +29,26 @@ public class UIManager : MonoBehaviour
 
     void UpdateDebugUI()
     {
+        switch (GameManager.Instance.GameState)
+        {
+            case GameState.InitialiseLevel:
+                gameStateText.text = "[Initialising Level]";
+                break;
+            case GameState.SpawnEnemies:
+                gameStateText.text = "[Spawning Enemies]";
+                break;
+            case GameState.PlayerPhase:
+                gameStateText.text = "[Player Phase]";
+                break;
+            case GameState.ShootPhase:
+                gameStateText.text = "[Shoot Phase]";
+                break;
+            case GameState.MovePhase:
+                gameStateText.text = "[Moving Enemies]";
+                break;
+            default:
+                break;
+        }
         if (GunManager.Instance.isGunEquipped)
         {
             equippedGunText.text = "[1] Equipped Gun: YES";

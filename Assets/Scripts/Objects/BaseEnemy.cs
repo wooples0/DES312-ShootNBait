@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.VFX;
 
 public class BaseEnemy : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class BaseEnemy : MonoBehaviour
         switch (enemyState)
         {
             case EnemyState.Idle:
+                if (targetTile != null) { targetTile = null; }
                 break;
             case EnemyState.Moving:
                 //Debug.Log("Starting coroutine");
@@ -30,7 +32,6 @@ public class BaseEnemy : MonoBehaviour
                 break;
             case EnemyState.Finished:
                 SetCurrentTile(targetTile);
-                targetTile = null;
                 ChangeState(EnemyState.Idle);
                 break;
         }
@@ -61,6 +62,22 @@ public class BaseEnemy : MonoBehaviour
         ChangeState(EnemyState.Moving);
     }
 
+    public void OnDeath()
+    {
+        currentTile.RemoveEnemyFromTile(this);
+        EnemyManager.Instance.spawnedEnemies.Remove(this);
+        enemyState = EnemyState.Dead;
+        //Debug.Log($"Killed enemy {this.name}");
+        Destroy(this.gameObject);
+        //StartCoroutine(OnDeathCoroutine());
+    }
+
+    //public IEnumerator OnDeathCoroutine()
+    //{
+    //    Debug.Log($"Killed enemy {this.name}");
+    //    Destroy(this.gameObject);
+    //    yield return null;
+    //}
 
     private IEnumerator MoveToTile()
     {
@@ -79,6 +96,7 @@ public class BaseEnemy : MonoBehaviour
         Idle,
         Moving,
         Finished,
+        Dead
     }
 
     private Vector2 GetPosition()

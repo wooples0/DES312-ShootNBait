@@ -57,15 +57,15 @@ public abstract class Tile : MonoBehaviour, IPointerMoveHandler, IPointerExitHan
     {
         if(enemiesOnTile.Contains(enemy))
         {
-            Debug.Log("Enemy already exists in list");
+            //Debug.Log("Enemy already exists in list");
         }
         else
         {
-            Debug.Log($"Adding {enemy.name} to list.");
+            //Debug.Log($"Adding {enemy.name} to list.");
             enemiesOnTile.Add(enemy);
             countLabel.text = enemiesOnTile.Count.ToString();
             countLabel.color = new Color(countLabel.color.r, countLabel.color.g, countLabel.color.b, countLabel.color.a + 0.2f);
-            Debug.Log($"Count now {enemiesOnTile.Count.ToString()}");
+            //Debug.Log($"Count now {enemiesOnTile.Count.ToString()}");
         }
     }
 
@@ -73,16 +73,16 @@ public abstract class Tile : MonoBehaviour, IPointerMoveHandler, IPointerExitHan
     {
         if (enemiesOnTile.Contains(enemy))
         {
-            Debug.Log($"Removing {enemy.name} from list.");
+            //Debug.Log($"Removing {enemy.name} from list.");
             enemiesOnTile.Remove(enemy);
             countLabel.text = enemiesOnTile.Count.ToString();
             countLabel.color = new Color(countLabel.color.r, countLabel.color.g, countLabel.color.b, countLabel.color.a - 0.2f);
             if(enemiesOnTile.Count == 0) { countLabel.color = new Color(countLabel.color.r, countLabel.color.g, countLabel.color.b, 0.2f); }
-            Debug.Log($"Count now {enemiesOnTile.Count.ToString()}");
+            //Debug.Log($"Count now {enemiesOnTile.Count.ToString()}");
         }
         else
         {
-            Debug.Log("Enemy not found in list");
+            //Debug.Log("Enemy not found in list");
         }
     }
     public void SetHighlight(int value, bool set)
