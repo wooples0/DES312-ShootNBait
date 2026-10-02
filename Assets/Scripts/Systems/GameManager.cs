@@ -30,16 +30,17 @@ public class GameManager : MonoBehaviour
                 StartCoroutine(GridManager.Instance.GenerateGrid());
                 break;
             case GameState.SpawnEnemies:
+                ScoreManager.Instance.ResetAllValues();
                 StartCoroutine(EnemyManager.Instance.SpawnNextWave());
-                Debug.Log("Spawn Enemies");
+                //Debug.Log("Spawn Enemies");
                 break;
             case GameState.PlayerPhase:
                 GridManager.Instance.UpdateTileHighlights();
-                Debug.Log("Player Phase");
+                //Debug.Log("Player Phase");
                 break;
             case GameState.MovePhase:
                 GridManager.Instance.UpdateTileHighlights();
-                Debug.Log("Move Phase");
+                //Debug.Log("Move Phase");
                 break;
             case GameState.ShootPhase:
                 if (GunManager.Instance.targetTile != null) { EnemyManager.Instance.KillEnemiesOnTile(GunManager.Instance.targetTile); }

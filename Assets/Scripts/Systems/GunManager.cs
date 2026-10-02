@@ -26,7 +26,7 @@ public class GunManager : MonoBehaviour
         GridManager.Instance.UpdateTileHighlights();
         if (GameManager.Instance.GameState != GameState.PlayerPhase) { return; }
         if (!ctx.started) { return; }
-        if (isGunEquipped) { return; }
+        if (isGunEquipped) { isGunEquipped = false; return; }
 
         isGunEquipped = true;
         //Do toher visual stuff
@@ -40,18 +40,26 @@ public class GunManager : MonoBehaviour
         {
             isGunEquipped = false;
         }
-        
-        switch (equippedBait)
-        {
-            case BaitType.Vertical:
-                equippedBait = BaitType.Horizontal;
-                GridManager.Instance.UpdateTileHighlights();
-                break;
-            case BaitType.Horizontal:
-                equippedBait = BaitType.Vertical;
-                GridManager.Instance.UpdateTileHighlights();
-                break;
-        }
+
+            switch (equippedBait)
+            {
+                case BaitType.Vertical:
+                    equippedBait = ctx.ReadValue<float>() > 0 ? BaitType.DiagonalR : BaitType.DiagonalL;
+                    GridManager.Instance.UpdateTileHighlights();
+                    break;
+                case BaitType.Horizontal:
+                    equippedBait = ctx.ReadValue<float>() > 0 ? BaitType.DiagonalL : BaitType.DiagonalR;
+                    GridManager.Instance.UpdateTileHighlights();
+                    break;
+                case BaitType.DiagonalR:
+                    equippedBait = ctx.ReadValue<float>() > 0 ? BaitType.Horizontal : BaitType.Vertical;
+                    GridManager.Instance.UpdateTileHighlights();
+                    break;
+                case BaitType.DiagonalL:
+                    equippedBait = ctx.ReadValue<float>() > 0 ? BaitType.Vertical : BaitType.Horizontal;
+                    GridManager.Instance.UpdateTileHighlights();
+                    break;
+            }
 
 
     }
@@ -61,34 +69,36 @@ public class GunManager : MonoBehaviour
         if (GameManager.Instance.GameState != GameState.PlayerPhase) { return; }
         if (!ctx.started) { return; }
         
-        if (isGunEquipped)
+        if (isGunEquipped && targetTile != null)
         {
+            ScoreManager.Instance.IncrementBulletsUsed(1);
             GameManager.Instance.ChangeState(GameState.ShootPhase);
         }
         else
         {
-            //foreach(BaseEnemy enemy in EnemyManager.Instance.spawnedEnemies)
-            //{
-            //    Debug.Log($"{enemy.name} target tile being set to {targetTile}");
-            //    enemy.SetTargetTile(targetTile);
-            //}
-            GameManager.Instance.ChangeState(GameState.MovePhase);
-            switch (equippedBait)
-            {
-                
-                case BaitType.Horizontal:
-                    StartCoroutine(EnemyManager.Instance.SetEnemiesOnTiles(targetTile, targetedTiles));
-                    break;
-                case BaitType.Vertical:
-                    StartCoroutine(EnemyManager.Instance.SetEnemiesOnTiles(targetTile, targetedTiles));
-                    break;
-            }
+            OnBait();
         }
     }
 
-    public void OnBait(InputAction.CallbackContext ctx)
+    public void OnBait()
     {
-
+        ScoreManager.Instance.IncrementBaitUsed(1);
+        GameManager.Instance.ChangeState(GameState.MovePhase);
+        switch (equippedBait)
+        {
+            case BaitType.Horizontal:
+                StartCoroutine(EnemyManager.Instance.SetEnemiesOnTiles(targetTile, targetedTiles));
+                break;
+            case BaitType.Vertical:
+                StartCoroutine(EnemyManager.Instance.SetEnemiesOnTiles(targetTile, targetedTiles));
+                break;
+            case BaitType.DiagonalR:
+                StartCoroutine(EnemyManager.Instance.SetEnemiesOnTiles(targetTile, targetedTiles));
+                break;
+            case BaitType.DiagonalL:
+                StartCoroutine(EnemyManager.Instance.SetEnemiesOnTiles(targetTile, targetedTiles));
+                break;
+        }
     }
 
     public enum BaitType

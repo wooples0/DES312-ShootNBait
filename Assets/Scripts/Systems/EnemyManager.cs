@@ -89,7 +89,7 @@ public class EnemyManager : MonoBehaviour
         {
             enemiesToKill[i].OnDeath();
         }
-        if(spawnedEnemies.Count > 0) { GameManager.Instance.ChangeState(GameState.MovePhase); }
+        if(spawnedEnemies.Count > 0) { StartCoroutine(MoveAllEnemies()); }
         GameManager.Instance.ChangeState(GameState.EndPhase);
     }
 
@@ -102,12 +102,30 @@ public class EnemyManager : MonoBehaviour
 
     public void OnDebug_MoveAllEnemies(InputAction.CallbackContext ctx)
     {
-        if (!ctx.started) { return; }
+        if (!ctx.started || GameManager.Instance.GameState != GameState.PlayerPhase) { return; }
+        StartCoroutine(MoveAllEnemies());
+    }
+
+    public IEnumerator MoveAllEnemies()
+    {
+        GameManager.Instance.ChangeState(GameState.MovePhase);
         foreach (BaseEnemy enemy in spawnedEnemies)
         {
             var randomTile = GridManager.Instance.GetRandomTile();
             enemy.SetTargetTile(randomTile);
         }
+        var allEnemiesMoved = false;
+        while (!allEnemiesMoved)
+        {
+            foreach (BaseEnemy enemy in spawnedEnemies)
+            {
+                allEnemiesMoved = true;
+                if (enemy.targetTile != null) { allEnemiesMoved = false; }
+            }
+            yield return null;
+        }
+        GameManager.Instance.ChangeState(GameState.PlayerPhase);
+        yield return null;
     }
 
     

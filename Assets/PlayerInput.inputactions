@@ -16,15 +16,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Bait",
-                    "type": "Button",
-                    "id": "96e28187-40a9-4e18-b8d5-d762f49ae14e",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "SwapBait",
                     "type": "Value",
                     "id": "683b0f0b-e90a-42d7-9125-c560a03f5500",
@@ -70,17 +61,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Shoot",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "765ac1a4-53ed-41c4-ab52-71b9280f739f",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Bait",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -132,6 +112,17 @@
                     "name": "",
                     "id": "9bec40c1-4920-4e41-bd91-8a119d79864a",
                     "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "EquipGun",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0c18e9b3-2d0e-41f3-b074-b9800f1a5cad",
+                    "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

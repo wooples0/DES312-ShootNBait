@@ -80,6 +80,17 @@ public class GridManager : MonoBehaviour
                     }
                 }
                 break;
+            case GunManager.BaitType.DiagonalL:
+                targetTile.SetHighlight(0, true);
+                foreach (Tile tile in GetTilesInDiagonalLeft(new Vector2((int)targetTile.transform.position.x, (int)targetTile.transform.position.y)))
+                {
+                    if (tile.TryGetComponent<GroundTile>(out var ground))
+                    {
+                        GunManager.Instance.targetedTiles.Add(ground);
+                        tile.SetHighlight(1, true);
+                    }
+                }
+                break;
         }
 
 
@@ -93,14 +104,6 @@ public class GridManager : MonoBehaviour
             for(int y = 0; y < height; y++)
             {
                 var i = x * width + y;
-                //var tileToSpawn = groundTile;
-                //switch (i)
-                //{
-                    
-                //    case 0:
-                //        tileToSpawn = groundTile;
-                //        break;
-                //}
 
                 var spawnedTile = Instantiate(groundTile, new Vector3(x, y), Quaternion.identity);
                 spawnedTile.name = $"Tile {x} {y}";
@@ -160,36 +163,50 @@ public class GridManager : MonoBehaviour
 
     public List<Tile> GetTilesInDiagonalRight(Vector2 pos)
     {
-        
+        List<Tile> diagonalTiles = new List<Tile>();
 
-        if(tiles.TryGetValue(pos, out var tile))
+        if (tiles.TryGetValue(pos, out var tile))
         {
-            List<Tile> diagonalTiles = new List<Tile>();
+            var currentPos = pos;
 
-            for(int y = (int)pos.y ; y < height-1; y++)
+            while(tiles.TryGetValue(currentPos, out var tileFound))
             {
-                for(int x = (int)pos.x; x < width-1; x++)
-                {
-                    if(tiles.TryGetValue(new Vector2(x, y), out var tileToAdd))
-                    {
-                        Debug.Log($"Adding tile {tileToAdd.name} to the list");
-                        diagonalTiles.Add(tileToAdd);
-                    }
-                    else
-                    {
-                        return diagonalTiles;
-                    }
-                }
+                diagonalTiles.Add(tileFound);
+                currentPos += new Vector2(1, 1);
+            }
+
+            currentPos = pos;
+            while (tiles.TryGetValue(currentPos, out var tileFound))
+            {
+                diagonalTiles.Add(tileFound);
+                currentPos += new Vector2(-1, -1);
             }
         }
-        return null;
+        return diagonalTiles;
     }
 
     public List<Tile> GetTilesInDiagonalLeft(Vector2 pos)
     {
         List<Tile> diagonalTiles = new List<Tile>();
 
-        return null;
+        if (tiles.TryGetValue(pos, out var tile))
+        {
+            var currentPos = pos;
+
+            while (tiles.TryGetValue(currentPos, out var tileFound))
+            {
+                diagonalTiles.Add(tileFound);
+                currentPos += new Vector2(-1, 1);
+            }
+
+            currentPos = pos;
+            while (tiles.TryGetValue(currentPos, out var tileFound))
+            {
+                diagonalTiles.Add(tileFound);
+                currentPos += new Vector2(1, -1);
+            }
+        }
+        return diagonalTiles;
     }
    
 
