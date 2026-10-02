@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class UIManager : MonoBehaviour
     public TMP_Text gameStateText;
     public TMP_Text bulletsUsedText;
     public TMP_Text baitUsedText;
+    public TMP_Dropdown gridSizeDropdown;
+    public Button reloadLevelButton;
     public Color equippedBaitTextColour1, equippedBaitTextColour2, equippedGunTextColour1, equippedGunTextColour2;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -23,7 +26,7 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-
+        gridSizeDropdown.value = PlayerPrefs.GetInt("width") - 2;
     }
     // Update is called once per frame
     void Update()
@@ -109,6 +112,13 @@ public class UIManager : MonoBehaviour
 
         bulletsUsedText.text = ScoreManager.Instance.bulletsUsed.ToString();
         baitUsedText.text = ScoreManager.Instance.baitUsed.ToString();
+    }
+
+    public void OnGridSizeDropdownChanged()
+    {
+        PlayerPrefs.SetInt("width", (gridSizeDropdown.value + 2));
+        PlayerPrefs.SetInt("height", (gridSizeDropdown.value + 2));
+        PlayerPrefs.Save();
     }
 
 }

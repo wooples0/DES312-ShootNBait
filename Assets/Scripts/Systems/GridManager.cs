@@ -17,10 +17,12 @@ public class GridManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        
+
     }
     private void Start()
     {
-
+        
     }
     private void Update()
     {
@@ -98,7 +100,20 @@ public class GridManager : MonoBehaviour
 
     public IEnumerator GenerateGrid()
     {
-        cam.transform.position = new Vector3((float)width / 2 - 0.5f, (float)height / 2 - 0.5f, (width + height) / 2 * -1);
+        if (PlayerPrefs.HasKey("width")) { width = PlayerPrefs.GetInt("width"); }
+        else
+        {
+            PlayerPrefs.SetInt("width", width);
+            PlayerPrefs.Save();
+        }
+        if (PlayerPrefs.HasKey("height")) { height = PlayerPrefs.GetInt("height"); }
+        else
+        {
+            PlayerPrefs.SetInt("height", height);
+            PlayerPrefs.Save();
+        }
+        cam.transform.position = new Vector3((float)width / 2 - 0.5f, (float)height / 2 - 0.5f, -10);
+        cam.GetComponent<Camera>().orthographicSize = ((width + height) / 4.0f);
         for (int x = 0; x < width; x++)
         {
             for(int y = 0; y < height; y++)

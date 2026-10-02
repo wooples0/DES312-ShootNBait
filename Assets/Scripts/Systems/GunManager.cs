@@ -68,8 +68,9 @@ public class GunManager : MonoBehaviour
     {
         if (GameManager.Instance.GameState != GameState.PlayerPhase) { return; }
         if (!ctx.started) { return; }
-        
-        if (isGunEquipped && targetTile != null)
+        if(targetTile == null) {  return; }
+
+        if (isGunEquipped )
         {
             ScoreManager.Instance.IncrementBulletsUsed(1);
             GameManager.Instance.ChangeState(GameState.ShootPhase);
