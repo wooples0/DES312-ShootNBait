@@ -99,7 +99,15 @@ public abstract class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                 break;
             case 1:
                 highlight2.SetActive(set);
-                highlight2.GetComponent<SpriteRenderer>().color = new Color (1, 1f, 0, 0.2f);
+                if (GunManager.Instance.equippedBait == GunManager.Instance.lastBaitUsed)
+                {
+                    highlight2.GetComponent<SpriteRenderer>().color = new Color(1, 0, 0, 0.2f);
+                }
+                else
+                {
+                    highlight2.GetComponent<SpriteRenderer>().color = new Color(1, 1f, 0, 0.2f);
+                }
+                    
                 break;
             case 2:
                 highlight.SetActive(false);

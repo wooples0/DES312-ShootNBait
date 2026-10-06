@@ -9,6 +9,7 @@ public class GunManager : MonoBehaviour
     public static GunManager Instance;
     public bool isGunEquipped;
     public BaitType equippedBait;
+    public BaitType lastBaitUsed;
     public Tile targetTile;
 
     public List<Tile> targetedTiles = new List<Tile>();
@@ -77,7 +78,7 @@ public class GunManager : MonoBehaviour
         }
         else
         {
-            if(targetTile.GetEnemiesOnTile().Count > 0)
+            if(targetTile.GetEnemiesOnTile().Count > 0 || equippedBait == lastBaitUsed)
             {
                 return;
             }
@@ -89,6 +90,7 @@ public class GunManager : MonoBehaviour
     {
         ScoreManager.Instance.IncrementBaitUsed(1);
         GameManager.Instance.ChangeState(GameState.MovePhase);
+        lastBaitUsed = equippedBait;
         switch (equippedBait)
         {
             case BaitType.Horizontal:

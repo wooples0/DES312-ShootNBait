@@ -26,6 +26,7 @@ public class EnemyManager : MonoBehaviour
 
     public void SpawnEnemy(int i)
     {
+        
         var spawnPos = GridManager.Instance.GetRandomTile().GetPosition();
         var spawnedEnemy = Instantiate(enemies[0].enemyPrefab, spawnPos, enemies[0].enemyPrefab.transform.rotation);
         spawnedEnemy.GetComponent<BaseEnemy>().currentTile = GridManager.Instance.GetTileAtPosition(spawnPos);
@@ -35,8 +36,9 @@ public class EnemyManager : MonoBehaviour
 
     public IEnumerator SpawnNextWave()
     {
-        for(int i = 0; i < 20; i++)
+        for (int i = 0; i < 20; i++)
         {
+            Random.InitState(42+i);
             SpawnEnemy(0);
             yield return new WaitForSeconds(0.005f);
         }

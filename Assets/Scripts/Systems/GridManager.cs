@@ -16,12 +16,12 @@ public class GridManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        
+
 
     }
     private void Start()
     {
-       
+        
     }
     private void Update()
     {
@@ -41,7 +41,6 @@ public class GridManager : MonoBehaviour
         if (GunManager.Instance.isGunEquipped)
         {
             targetTile.SetHighlight(0, true);
-            targetTile.SetHighlight(1, true);
             GunManager.Instance.targetedTiles.Add(targetTile);
             return;
         }
@@ -51,11 +50,16 @@ public class GridManager : MonoBehaviour
             targetTile.SetHighlight(2, true);
             return;
         }
+        else if(GunManager.Instance.equippedBait == GunManager.Instance.lastBaitUsed)
+        {
+            targetTile.SetHighlight(2, true);
+        }
         else
         {
             targetTile.highlight_directionArrow.SetActive(true);
             targetTile.SetHighlight(1, true);
         }
+
         switch (GunManager.Instance.equippedBait)
         {
             case GunManager.BaitType.Vertical:
@@ -68,6 +72,7 @@ public class GridManager : MonoBehaviour
                         if (tile == targetTile)
                         {
                             tile.highlight_directionArrow.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+                            tile.SetHighlight(1, true);
                         }
                         else { tile.SetHighlight(1, true); }
                     }
@@ -83,6 +88,7 @@ public class GridManager : MonoBehaviour
                         if (tile == targetTile)
                         {
                             tile.highlight_directionArrow.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 90));
+                            tile.SetHighlight(1, true);
                         }
                         else { tile.SetHighlight(1, true); }
 
@@ -98,6 +104,7 @@ public class GridManager : MonoBehaviour
                         if (tile == targetTile)
                         {
                             tile.highlight_directionArrow.transform.rotation = Quaternion.Euler(new Vector3(0, 0, -45));
+                            tile.SetHighlight(1, true);
                         }
                         else { tile.SetHighlight(1, true); }
 
@@ -113,6 +120,7 @@ public class GridManager : MonoBehaviour
                         if (tile == targetTile)
                         {
                             tile.highlight_directionArrow.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 45));
+                            tile.SetHighlight(1, true);
                         }
                         else { tile.SetHighlight(1, true); }
                     }
@@ -125,6 +133,7 @@ public class GridManager : MonoBehaviour
 
     public IEnumerator GenerateGrid()
     {
+        //Random.InitState(42);
         if (PlayerPrefs.HasKey("width")) { width = PlayerPrefs.GetInt("width"); }
         else
         {
@@ -158,6 +167,11 @@ public class GridManager : MonoBehaviour
         GameManager.Instance.ChangeState(GameState.SpawnEnemies);
         yield return null;
     }
+
+    //public IEnumerator GeneratePremadeGrid(Dictionary<>)
+    //{
+
+    //}
 
     public Tile GetTileAtPosition(Vector2 pos)
     {
