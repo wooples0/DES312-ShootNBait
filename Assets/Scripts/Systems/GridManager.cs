@@ -7,9 +7,8 @@ public class GridManager : MonoBehaviour
 {
     public static GridManager Instance;
     [SerializeField] private int width, height;
-    [SerializeField] private Tile groundTile, wallTile;
+    [SerializeField] private Tile groundTile;
     [SerializeField] private Transform cam;
-    [SerializeField] private int[] map;
 
     private Dictionary<Vector2, Tile> tiles = new Dictionary<Vector2, Tile>();
     private List<Tile> highlightedTiles = new List<Tile>();
@@ -22,7 +21,7 @@ public class GridManager : MonoBehaviour
     }
     private void Start()
     {
-        
+       
     }
     private void Update()
     {
@@ -42,54 +41,80 @@ public class GridManager : MonoBehaviour
         if (GunManager.Instance.isGunEquipped)
         {
             targetTile.SetHighlight(0, true);
+            targetTile.SetHighlight(1, true);
             GunManager.Instance.targetedTiles.Add(targetTile);
             return;
         }
         
+        if(targetTile.GetEnemiesOnTile().Count > 0)
+        {
+            targetTile.SetHighlight(2, true);
+            return;
+        }
+        else
+        {
+            targetTile.highlight_directionArrow.SetActive(true);
+            targetTile.SetHighlight(1, true);
+        }
         switch (GunManager.Instance.equippedBait)
         {
             case GunManager.BaitType.Vertical:
-                targetTile.SetHighlight(0, true);
+                
                 foreach (Tile tile in GetTilesInColumn(new Vector2((int)targetTile.transform.position.x, (int)targetTile.transform.position.y)))
                 {
                     if (tile.TryGetComponent<GroundTile>(out var ground))
                     {
                         GunManager.Instance.targetedTiles.Add(ground);
-                        tile.SetHighlight(1, true);
+                        if (tile == targetTile)
+                        {
+                            tile.highlight_directionArrow.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+                        }
+                        else { tile.SetHighlight(1, true); }
                     }
                 }
                 break;
             case GunManager.BaitType.Horizontal:
-                targetTile.SetHighlight(0, true);
                 foreach (Tile tile in GetTilesInRow(new Vector2((int)targetTile.transform.position.x, (int)targetTile.transform.position.y)))
                 {
                     if (tile.TryGetComponent<GroundTile>(out var ground))
                     {
                         GunManager.Instance.targetedTiles.Add(ground);
 
-                        tile.SetHighlight(1, true);
+                        if (tile == targetTile)
+                        {
+                            tile.highlight_directionArrow.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 90));
+                        }
+                        else { tile.SetHighlight(1, true); }
+
                     }
                 }
                 break;
             case GunManager.BaitType.DiagonalR:
-                targetTile.SetHighlight(0, true);
                 foreach (Tile tile in GetTilesInDiagonalRight(new Vector2((int)targetTile.transform.position.x, (int)targetTile.transform.position.y)))
                 {
                     if (tile.TryGetComponent<GroundTile>(out var ground))
                     {
                         GunManager.Instance.targetedTiles.Add(ground);
-                        tile.SetHighlight(1, true);
+                        if (tile == targetTile)
+                        {
+                            tile.highlight_directionArrow.transform.rotation = Quaternion.Euler(new Vector3(0, 0, -45));
+                        }
+                        else { tile.SetHighlight(1, true); }
+
                     }
                 }
                 break;
             case GunManager.BaitType.DiagonalL:
-                targetTile.SetHighlight(0, true);
                 foreach (Tile tile in GetTilesInDiagonalLeft(new Vector2((int)targetTile.transform.position.x, (int)targetTile.transform.position.y)))
                 {
                     if (tile.TryGetComponent<GroundTile>(out var ground))
                     {
                         GunManager.Instance.targetedTiles.Add(ground);
-                        tile.SetHighlight(1, true);
+                        if (tile == targetTile)
+                        {
+                            tile.highlight_directionArrow.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 45));
+                        }
+                        else { tile.SetHighlight(1, true); }
                     }
                 }
                 break;
@@ -233,6 +258,8 @@ public class GridManager : MonoBehaviour
             if(tile.TryGetComponent<GroundTile>(out var groundTile)){
                 groundTile.SetHighlight(0, false);
                 groundTile.SetHighlight(1, false);
+                groundTile.SetHighlight(2, false);
+                groundTile.highlight_directionArrow.SetActive(false);
             }
             
         }

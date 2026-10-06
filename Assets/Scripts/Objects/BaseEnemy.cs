@@ -82,9 +82,9 @@ public class BaseEnemy : MonoBehaviour
     private IEnumerator MoveToTile()
     {
         if (currentTile != null) { currentTile.RemoveEnemyFromTile(this); }
-        while (new Vector2(transform.position.x, transform.position.y) != targetTile.GetPosition())
+        while (Vector3.Distance(new Vector3(transform.position.x, transform.position.y), targetTile.GetPosition()) >= 0.1f)
         {
-            transform.position = Vector3.MoveTowards(transform.position, targetTile.GetPosition(), walkSpeed * Time.deltaTime);
+            transform.position = Vector3.Lerp(transform.position, targetTile.GetPosition(), walkSpeed * Time.deltaTime);
             yield return null;
         }
         //yield return new WaitUntil(() => new Vector2() == targetTile.GetPosition());

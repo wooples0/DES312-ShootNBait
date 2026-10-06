@@ -10,10 +10,13 @@ public abstract class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     [SerializeField] protected SpriteRenderer renderer;
     [SerializeField] private GameObject highlight;
     [SerializeField] private GameObject highlight2;
+    [SerializeField] private GameObject highlight3;
+    public GameObject highlight_directionArrow;
     [SerializeField] protected TMP_Text positionLabel;
     [SerializeField] protected TMP_Text countLabel;
 
     [SerializeField] protected Color gunHighlightColour1, gunHighlightColour2;
+    [SerializeField] protected Color tileHighlightColour;
 
     [SerializeField] private List<BaseEnemy> enemiesOnTile = new List<BaseEnemy>();
     [SerializeField] private bool IsWalkable;
@@ -96,7 +99,12 @@ public abstract class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                 break;
             case 1:
                 highlight2.SetActive(set);
-                highlight.GetComponent<SpriteRenderer>().color = gunHighlightColour2;
+                highlight2.GetComponent<SpriteRenderer>().color = new Color (1, 1f, 0, 0.2f);
+                break;
+            case 2:
+                highlight.SetActive(false);
+                highlight2.GetComponent<SpriteRenderer>().color = Color.red;
+                highlight3.SetActive(set);
                 break;
         }
     }

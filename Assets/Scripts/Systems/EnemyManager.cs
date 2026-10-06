@@ -35,7 +35,7 @@ public class EnemyManager : MonoBehaviour
 
     public IEnumerator SpawnNextWave()
     {
-        for(int i = 0; i < 10; i++)
+        for(int i = 0; i < 20; i++)
         {
             SpawnEnemy(0);
             yield return new WaitForSeconds(0.005f);

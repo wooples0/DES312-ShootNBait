@@ -77,6 +77,10 @@ public class GunManager : MonoBehaviour
         }
         else
         {
+            if(targetTile.GetEnemiesOnTile().Count > 0)
+            {
+                return;
+            }
             OnBait();
         }
     }
