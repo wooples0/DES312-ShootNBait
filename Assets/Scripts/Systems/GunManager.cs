@@ -8,8 +8,16 @@ public class GunManager : MonoBehaviour
 {
     public static GunManager Instance;
     public bool isGunEquipped;
-    public BaitType equippedBait;
-    public BaitType lastBaitUsed;
+    public Axis equippedBait;
+    public Axis lastBaitUsed;
+    public bool lastBaitUsedIsEquipped
+    {
+        get
+        {
+            return lastBaitUsed == equippedBait;
+        }
+    }
+
     public Tile targetTile;
 
     public List<Tile> targetedTiles = new List<Tile>();
@@ -21,10 +29,11 @@ public class GunManager : MonoBehaviour
     private void Start()
     {
         isGunEquipped = true;
+        equippedBait = Axis.Horizontal;
+        lastBaitUsed = Axis.None;
     }
     public void OnEquipGun(InputAction.CallbackContext ctx)
     {
-        GridManager.Instance.UpdateTileHighlights();
         if (GameManager.Instance.GameState != GameState.PlayerPhase) { return; }
         if (!ctx.started) { return; }
         if (isGunEquipped) { isGunEquipped = false; return; }
@@ -42,25 +51,25 @@ public class GunManager : MonoBehaviour
             isGunEquipped = false;
         }
 
-            switch (equippedBait)
-            {
-                case BaitType.Vertical:
-                    equippedBait = ctx.ReadValue<float>() > 0 ? BaitType.DiagonalR : BaitType.DiagonalL;
-                    GridManager.Instance.UpdateTileHighlights();
-                    break;
-                case BaitType.Horizontal:
-                    equippedBait = ctx.ReadValue<float>() > 0 ? BaitType.DiagonalL : BaitType.DiagonalR;
-                    GridManager.Instance.UpdateTileHighlights();
-                    break;
-                case BaitType.DiagonalR:
-                    equippedBait = ctx.ReadValue<float>() > 0 ? BaitType.Horizontal : BaitType.Vertical;
-                    GridManager.Instance.UpdateTileHighlights();
-                    break;
-                case BaitType.DiagonalL:
-                    equippedBait = ctx.ReadValue<float>() > 0 ? BaitType.Vertical : BaitType.Horizontal;
-                    GridManager.Instance.UpdateTileHighlights();
-                    break;
-            }
+        switch (equippedBait)
+        {
+            case Axis.Vertical:
+                equippedBait = ctx.ReadValue<float>() > 0 ? Axis.DiagonalR : Axis.DiagonalL;
+
+                break;
+            case Axis.Horizontal:
+                equippedBait = ctx.ReadValue<float>() > 0 ? Axis.DiagonalL : Axis.DiagonalR;
+
+                break;
+            case Axis.DiagonalR:
+                equippedBait = ctx.ReadValue<float>() > 0 ? Axis.Horizontal : Axis.Vertical;
+
+                break;
+            case Axis.DiagonalL:
+                equippedBait = ctx.ReadValue<float>() > 0 ? Axis.Vertical : Axis.Horizontal;
+
+                break;
+        }
 
 
     }
@@ -91,28 +100,17 @@ public class GunManager : MonoBehaviour
         ScoreManager.Instance.IncrementBaitUsed(1);
         GameManager.Instance.ChangeState(GameState.MovePhase);
         lastBaitUsed = equippedBait;
-        switch (equippedBait)
-        {
-            case BaitType.Horizontal:
-                StartCoroutine(EnemyManager.Instance.SetEnemiesOnTiles(targetTile, targetedTiles));
-                break;
-            case BaitType.Vertical:
-                StartCoroutine(EnemyManager.Instance.SetEnemiesOnTiles(targetTile, targetedTiles));
-                break;
-            case BaitType.DiagonalR:
-                StartCoroutine(EnemyManager.Instance.SetEnemiesOnTiles(targetTile, targetedTiles));
-                break;
-            case BaitType.DiagonalL:
-                StartCoroutine(EnemyManager.Instance.SetEnemiesOnTiles(targetTile, targetedTiles));
-                break;
-        }
+        StartCoroutine(EnemyManager.Instance.SetEnemiesOnTiles(targetTile, targetedTiles));
     }
 
-    public enum BaitType
-    {
-        Horizontal = 0,
-        Vertical = 1,
-        DiagonalR = 2,
-        DiagonalL = 3
-    }
+    
+}
+
+public enum Axis
+{
+    None = 0,
+    Horizontal = 1,
+    Vertical = 2,
+    DiagonalR = 3,
+    DiagonalL = 4
 }

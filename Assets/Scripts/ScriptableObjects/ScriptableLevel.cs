@@ -5,11 +5,12 @@ using System.Collections.Generic;
 
 public class ScriptableLevel : ScriptableObject
 {
-    [SerializeField] private string levelName;
-    private Dictionary<Vector2, Tile> levelTiles;
-    private Dictionary<Vector2, BaseEnemy> enemiesInLevel;
+    public string levelName;
+    public int size;
+    public Dictionary<Vector2, Tile> levelTiles;
+    public Dictionary<Vector2, BaseEnemy> enemiesInLevel;
 
-    [SerializeField] private Color tileColour;
-    [SerializeField] private Color tileOffsetColour;
+    public Color tileColour;
+    public Color tileOffsetColour;
 
 }

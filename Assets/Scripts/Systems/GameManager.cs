@@ -29,27 +29,32 @@ public class GameManager : MonoBehaviour
         switch (newState)
         {
             case GameState.InitialiseLevel:
-                StartCoroutine(GridManager.Instance.GenerateGrid());
+                StartCoroutine(GridManager.Instance.GenerateGrid
+                    (
+                    GridManager.Instance.size, 
+                    GridManager.Instance.size)
+                    );
                 break;
+
             case GameState.SpawnEnemies:
                 ScoreManager.Instance.ResetAllValues();
+                GunManager.Instance.lastBaitUsed = Axis.None;
                 StartCoroutine(EnemyManager.Instance.SpawnNextWave());
-                //Debug.Log("Spawn Enemies");
                 break;
             case GameState.PlayerPhase:
-                GridManager.Instance.UpdateTileHighlights();
-                //Debug.Log("Player Phase");
                 break;
+            
             case GameState.MovePhase:
-                GridManager.Instance.UpdateTileHighlights();
-                //Debug.Log("Move Phase");
                 break;
+
             case GameState.ShootPhase:
                 if (GunManager.Instance.targetTile != null) { EnemyManager.Instance.KillEnemiesOnTile(GunManager.Instance.targetTile); }
                 break;
+            
             case GameState.EndPhase:
-                if (EnemyManager.Instance.spawnedEnemies.Count == 0) { ChangeState(GameState.SpawnEnemies); } else { ChangeState(GameState.PlayerPhase); }
-                    break;
+                ChangeState(EnemyManager.Instance.spawnedEnemies.Count == 0 ? GameState.SpawnEnemies : GameState.PlayerPhase);
+                break;
+            
             default:
                 throw new ArgumentOutOfRangeException(nameof(newState), newState, null);
         }
@@ -67,5 +72,7 @@ public enum GameState
     PlayerPhase = 2,
     MovePhase = 3,
     ShootPhase = 4,
-    EndPhase = 5
+    EndPhase = 5,
+    SaveDataPhase = 6,
+    LoadDataPhase = 7,
 }

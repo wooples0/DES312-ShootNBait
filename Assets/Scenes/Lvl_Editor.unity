@@ -347,13 +347,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 774717472}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &774717475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -394,7 +394,7 @@ GameObject:
   - component: {fileID: 1064367469}
   - component: {fileID: 1064367468}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: LevelEditor_GridGenerator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -412,6 +412,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b32db0cbe7a186438ebc7a7734c0ff7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelEditor_GridGenerator
+  width: 0
+  height: 0
 --- !u!4 &1064367469
 Transform:
   m_ObjectHideFlags: 0
@@ -468,7 +470,27 @@ MonoBehaviour:
   m_ControlsChangedEvent:
     m_PersistentCalls:
       m_Calls: []
-  m_ActionEvents: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c27f744e-9490-4ae1-9f03-fe1654247b68
+    m_ActionName: 'Player/Shoot[/Mouse/leftButton]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 683b0f0b-e90a-42d7-9125-c560a03f5500
+    m_ActionName: 'Player/SwapBait[/Mouse/scroll/y,/Keyboard/2]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e4c9326d-25b9-4b0a-bf80-6fe847fffbfc
+    m_ActionName: 'Player/Debug_SpawnEnemy[/Keyboard/0]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: fb84e4b9-d653-449a-9636-33d44f2c0d44
+    m_ActionName: 'Player/Debug_MoveAllEnemies[/Keyboard/r]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 675bb3a2-a708-4401-a8ed-883055b37bca
+    m_ActionName: 'Player/EquipGun[/Keyboard/1,/Mouse/rightButton]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player

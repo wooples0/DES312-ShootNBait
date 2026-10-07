@@ -1,12 +1,12 @@
-using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public class GridManager : MonoBehaviour
 {
     public static GridManager Instance;
-    [SerializeField] private int width, height;
+    [SerializeField] public int size;
     [SerializeField] private Tile groundTile;
     [SerializeField] private Transform cam;
 
@@ -16,136 +16,54 @@ public class GridManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-
-
     }
     private void Start()
     {
-        
+
     }
     private void Update()
     {
-        //UpdateTileHighlights();
+        ClearAllTileHighlights();
+        UpdateTileHighlights();
     }
     
-    public void UpdateTileHighlights()
+    private void UpdateTileHighlights()
     {
-        ClearAllTileHighlights();
         if (GameManager.Instance.GameState != GameState.PlayerPhase) { return; }
+        
         var targetTile = GunManager.Instance.targetTile;
         GunManager.Instance.targetedTiles.Clear();
-        if(targetTile == null)
-        { 
-            return; 
-        }
+        
+        if(targetTile == null) { return; }
+
         if (GunManager.Instance.isGunEquipped)
         {
             targetTile.SetHighlight(0, true);
-            GunManager.Instance.targetedTiles.Add(targetTile);
             return;
         }
-        
-        if(targetTile.GetEnemiesOnTile().Count > 0)
+
+        var enemiesOnTile = targetTile.GetEnemiesOnTile().Count > 0;
+
+        if(enemiesOnTile)
         {
-            targetTile.SetHighlight(2, true);
+            targetTile.SetHighlight(HighlightType.Nope, true);
             return;
         }
-        else if(GunManager.Instance.equippedBait == GunManager.Instance.lastBaitUsed)
+
+        Vector2 targetTilePos = new Vector2((int)targetTile.transform.position.x, (int)targetTile.transform.position.y);
+
+        foreach (Tile tile in GetTilesInAxis(GunManager.Instance.equippedBait, targetTilePos))
         {
-            targetTile.SetHighlight(2, true);
+            if(tile.TryGetComponent<GroundTile>(out var groundTile))
+            {
+                GunManager.Instance.targetedTiles.Add(tile);
+                tile.SetHighlight(HighlightType.Selected, true);
+            }
         }
-        else
-        {
-            targetTile.highlight_directionArrow.SetActive(true);
-            targetTile.SetHighlight(1, true);
-        }
-
-        switch (GunManager.Instance.equippedBait)
-        {
-            case GunManager.BaitType.Vertical:
-                
-                foreach (Tile tile in GetTilesInColumn(new Vector2((int)targetTile.transform.position.x, (int)targetTile.transform.position.y)))
-                {
-                    if (tile.TryGetComponent<GroundTile>(out var ground))
-                    {
-                        GunManager.Instance.targetedTiles.Add(ground);
-                        if (tile == targetTile)
-                        {
-                            tile.highlight_directionArrow.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
-                            tile.SetHighlight(1, true);
-                        }
-                        else { tile.SetHighlight(1, true); }
-                    }
-                }
-                break;
-            case GunManager.BaitType.Horizontal:
-                foreach (Tile tile in GetTilesInRow(new Vector2((int)targetTile.transform.position.x, (int)targetTile.transform.position.y)))
-                {
-                    if (tile.TryGetComponent<GroundTile>(out var ground))
-                    {
-                        GunManager.Instance.targetedTiles.Add(ground);
-
-                        if (tile == targetTile)
-                        {
-                            tile.highlight_directionArrow.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 90));
-                            tile.SetHighlight(1, true);
-                        }
-                        else { tile.SetHighlight(1, true); }
-
-                    }
-                }
-                break;
-            case GunManager.BaitType.DiagonalR:
-                foreach (Tile tile in GetTilesInDiagonalRight(new Vector2((int)targetTile.transform.position.x, (int)targetTile.transform.position.y)))
-                {
-                    if (tile.TryGetComponent<GroundTile>(out var ground))
-                    {
-                        GunManager.Instance.targetedTiles.Add(ground);
-                        if (tile == targetTile)
-                        {
-                            tile.highlight_directionArrow.transform.rotation = Quaternion.Euler(new Vector3(0, 0, -45));
-                            tile.SetHighlight(1, true);
-                        }
-                        else { tile.SetHighlight(1, true); }
-
-                    }
-                }
-                break;
-            case GunManager.BaitType.DiagonalL:
-                foreach (Tile tile in GetTilesInDiagonalLeft(new Vector2((int)targetTile.transform.position.x, (int)targetTile.transform.position.y)))
-                {
-                    if (tile.TryGetComponent<GroundTile>(out var ground))
-                    {
-                        GunManager.Instance.targetedTiles.Add(ground);
-                        if (tile == targetTile)
-                        {
-                            tile.highlight_directionArrow.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 45));
-                            tile.SetHighlight(1, true);
-                        }
-                        else { tile.SetHighlight(1, true); }
-                    }
-                }
-                break;
-        }
-
-
     }
 
-    public IEnumerator GenerateGrid()
+    public IEnumerator GenerateGrid(int width, int height)
     {
-        //Random.InitState(42);
-        if (PlayerPrefs.HasKey("width")) { width = PlayerPrefs.GetInt("width"); }
-        else
-        {
-            PlayerPrefs.SetInt("width", width);
-            PlayerPrefs.Save();
-        }
-        if (PlayerPrefs.HasKey("height")) { height = PlayerPrefs.GetInt("height"); }
-        else
-        {
-            PlayerPrefs.SetInt("height", height);
-            PlayerPrefs.Save();
-        }
         cam.transform.position = new Vector3((float)width / 2 - 0.5f, (float)height / 2 - 0.5f, -10);
         cam.GetComponent<Camera>().orthographicSize = ((width + height) / 4.0f);
         for (int x = 0; x < width; x++)
@@ -160,7 +78,7 @@ public class GridManager : MonoBehaviour
                 spawnedTile.Init(x,y);
 
                 tiles[new Vector2((int)x, (int)y)] = spawnedTile;
-                yield return new WaitForSeconds(0.0005f);
+                yield return new WaitForSeconds(0.00025f);
             }
         }
 
@@ -182,87 +100,105 @@ public class GridManager : MonoBehaviour
         return null;
         
     }
-
-    public Tile[] GetTilesInColumn(Vector2 pos)
+    public Tile GetAdjacentTile(Axis axis, Vector2 startPos, int offset)
     {
-        Tile[] columnTiles = new Tile[height];
-
-        if(tiles.TryGetValue(pos, out var tile))//thers prob a more efficient way to do this but this works For now
-        {
-            for(int i = 0; i < height; i++)
-            {
-                var indexTile = GetTileAtPosition(new Vector2((int)pos.x, i));
-                columnTiles[i] = indexTile;
-            }
-            return columnTiles;
+        if (offset != -1 && offset != 1)
+        { Debug.Log($"Offset {offset} not valid. (Must be -1 or 1)"); 
+            return null; 
         }
-        return null;
-    }
 
-    public Tile[] GetTilesInRow(Vector2 pos)
-    {
-        Tile[] rowTiles = new Tile[height];
+        Tile adjacentTile = null;
 
-        if (tiles.TryGetValue(pos, out var tile))
+        switch (axis)
         {
-            for (int i = 0; i < height; i++)
-            {
-                var indexTile = GetTileAtPosition(new Vector2(i, (int)pos.y));
-                rowTiles[i] = indexTile;
-            }
-            return rowTiles;
+            case Axis.Horizontal:
+                adjacentTile = GetTileAtPosition(new Vector2(startPos.x + offset, startPos.y));
+                break;
+            case Axis.Vertical:
+                adjacentTile = GetTileAtPosition(new Vector2(startPos.x, startPos.y + offset));
+                break;
+            case Axis.DiagonalR:
+                adjacentTile = GetTileAtPosition(new Vector2(startPos.x + offset, startPos.y + offset));
+                break;
+            case Axis.DiagonalL:
+                adjacentTile = GetTileAtPosition(new Vector2(startPos.x - offset, startPos.y + offset));
+                break;
         }
-        return null;
+
+        if (adjacentTile == null) { Debug.Log("Tile not found or out of bounds."); }
+        return adjacentTile != null ? adjacentTile : null;
     }
-
-    public List<Tile> GetTilesInDiagonalRight(Vector2 pos)
+    public List<Tile> GetTilesInAxis(Axis axis, Vector2 startPos)
     {
-        List<Tile> diagonalTiles = new List<Tile>();
-
-        if (tiles.TryGetValue(pos, out var tile))
+        List<Tile> tilesToReturn = new List<Tile>();
+        if(!tiles.TryGetValue(startPos, out var tileAtStartPos))
         {
-            var currentPos = pos;
-
-            while(tiles.TryGetValue(currentPos, out var tileFound))
-            {
-                diagonalTiles.Add(tileFound);
-                currentPos += new Vector2(1, 1);
-            }
-
-            currentPos = pos;
-            while (tiles.TryGetValue(currentPos, out var tileFound))
-            {
-                diagonalTiles.Add(tileFound);
-                currentPos += new Vector2(-1, -1);
-            }
+            //Debug.Log($"Specified target tile {startPos} not found in grid.");
+            return null;
         }
-        return diagonalTiles;
-    }
-
-    public List<Tile> GetTilesInDiagonalLeft(Vector2 pos)
-    {
-        List<Tile> diagonalTiles = new List<Tile>();
-
-        if (tiles.TryGetValue(pos, out var tile))
+        
+        if(axis == Axis.Vertical)
         {
-            var currentPos = pos;
+            for(int i = 0; i < size; i++)
+            {
+                var indexTile = GetTileAtPosition(new Vector2((int)startPos.x, i));
+                tilesToReturn.Add(indexTile);
+            }
+            //Debug.Log($"{tilesToReturn.Count} tiles in horizontal");
+            return tilesToReturn;
+        }
+        else if(axis == Axis.Horizontal)
+        {
+            for (int i = 0; i < size; i++)
+            {
+                var indexTile = GetTileAtPosition(new Vector2(i, (int)startPos.y));
+                tilesToReturn.Add(indexTile);
+            }
+            //Debug.Log($"{tilesToReturn.Count} tiles in vertical");
+            return tilesToReturn;
+        }
+        else if(axis == Axis.DiagonalL)
+        {
+            var currentPos = startPos;
 
             while (tiles.TryGetValue(currentPos, out var tileFound))
             {
-                diagonalTiles.Add(tileFound);
+                tilesToReturn.Add(tileFound);
                 currentPos += new Vector2(-1, 1);
             }
 
-            currentPos = pos;
+            currentPos = startPos;
             while (tiles.TryGetValue(currentPos, out var tileFound))
             {
-                diagonalTiles.Add(tileFound);
+                tilesToReturn.Add(tileFound);
                 currentPos += new Vector2(1, -1);
             }
+            return tilesToReturn;
         }
-        return diagonalTiles;
+        else if(axis == Axis.DiagonalR)
+        {
+            var currentPos = startPos;
+
+            while (tiles.TryGetValue(currentPos, out var tileFound))
+            {
+                tilesToReturn.Add(tileFound);
+                currentPos += new Vector2(1, 1);
+            }
+
+            currentPos = startPos;
+            while (tiles.TryGetValue(currentPos, out var tileFound))
+            {
+                tilesToReturn.Add(tileFound);
+                currentPos += new Vector2(-1, -1);
+            }
+            return tilesToReturn;
+        }
+        else
+        {
+            return null;
+        }
+        
     }
-   
 
     public void ClearAllTileHighlights()
     {
@@ -270,10 +206,10 @@ public class GridManager : MonoBehaviour
         foreach(var tile in tiles.Values)
         {
             if(tile.TryGetComponent<GroundTile>(out var groundTile)){
-                groundTile.SetHighlight(0, false);
-                groundTile.SetHighlight(1, false);
-                groundTile.SetHighlight(2, false);
-                groundTile.highlight_directionArrow.SetActive(false);
+                groundTile.SetHighlight(HighlightType.Crosshair, false);
+                groundTile.SetHighlight(HighlightType.Selected, false);
+                groundTile.SetHighlight(HighlightType.Nope, false);
+                groundTile.SetHighlight(HighlightType.Arrows, false);
             }
             
         }
@@ -281,7 +217,7 @@ public class GridManager : MonoBehaviour
 
     public Tile GetRandomTile()
     {
-        var randomPos = new Vector2(Random.Range(0, width - 1), Random.Range(0, height - 1));
+        var randomPos = new Vector2(Random.Range(0, size - 1), Random.Range(0, size - 1));
         return GetTileAtPosition(randomPos);
     }
 

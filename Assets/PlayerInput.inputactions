@@ -88,6 +88,17 @@
                 },
                 {
                     "name": "",
+                    "id": "26914c78-1dc0-4419-aee7-ae49f9876788",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Debug_MoveAllEnemies",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "b89ae36a-1b16-4bd1-a213-e0f4a3b7859b",
                     "path": "<Mouse>/scroll/y",
                     "interactions": "",

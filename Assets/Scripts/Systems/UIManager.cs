@@ -62,16 +62,16 @@ public class UIManager : MonoBehaviour
             equippedGunText.text = "> YES";
             switch (GunManager.Instance.equippedBait)
             {
-                case GunManager.BaitType.Horizontal:
+                case Axis.Horizontal:
                     equippedBaitText.text = "Horizontal";
                     break;
-                case GunManager.BaitType.Vertical:
+                case Axis.Vertical:
                     equippedBaitText.text = "Vertical";
                     break;
-                case GunManager.BaitType.DiagonalR:
+                case Axis.DiagonalR:
                     equippedBaitText.text = "DiagonalRight";
                     break;
-                case GunManager.BaitType.DiagonalL:
+                case Axis.DiagonalL:
                     equippedBaitText.text = "DiagonalLeft";
                     break;
             }
@@ -85,16 +85,16 @@ public class UIManager : MonoBehaviour
             equippedBaitText.color = equippedBaitTextColour1;
             switch (GunManager.Instance.equippedBait)
             {
-                case GunManager.BaitType.Horizontal:
+                case Axis.Horizontal:
                     equippedBaitText.text = "> Horizontal";
                     break;
-                case GunManager.BaitType.Vertical:
+                case Axis.Vertical:
                     equippedBaitText.text = "> Vertical";
                     break;
-                case GunManager.BaitType.DiagonalR:
+                case Axis.DiagonalR:
                     equippedBaitText.text = "> DiagonalRight";
                     break;
-                case GunManager.BaitType.DiagonalL:
+                case Axis.DiagonalL:
                     equippedBaitText.text = "> DiagonalLeft";
                     break;
             }
