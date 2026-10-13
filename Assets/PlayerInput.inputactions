@@ -50,6 +50,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "LevelEditor_ToggleEnemyOnTile",
+                    "type": "Button",
+                    "id": "493669e3-8f57-40b3-a1dc-85592cdad127",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "LevelEditor_ToggleWallOnTile",
+                    "type": "Button",
+                    "id": "954962a5-bde8-44e1-a8de-57d2a74d419a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -138,6 +156,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "EquipGun",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "994ae7cc-3307-46ed-a6a5-60d9bbb2a3ed",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LevelEditor_ToggleEnemyOnTile",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "813ad205-cf8b-4a5b-94bb-3c9c507bddfb",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LevelEditor_ToggleWallOnTile",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

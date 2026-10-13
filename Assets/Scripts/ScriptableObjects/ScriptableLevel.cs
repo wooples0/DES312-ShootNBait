@@ -5,12 +5,10 @@ using System.Collections.Generic;
 
 public class ScriptableLevel : ScriptableObject
 {
-    public string levelName;
-    public int size;
-    public Dictionary<Vector2, Tile> levelTiles;
-    public Dictionary<Vector2, BaseEnemy> enemiesInLevel;
-
-    public Color tileColour;
-    public Color tileOffsetColour;
+    public int id;
+    public int width;
+    public int height;
+    public Dictionary<Vector2, int> gridLayout = new Dictionary<Vector2, int>();
+    public Dictionary<Vector2, int> enemyLayout = new Dictionary<Vector2, int>();
 
 }
