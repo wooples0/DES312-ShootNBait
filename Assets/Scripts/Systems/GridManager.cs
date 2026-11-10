@@ -100,6 +100,7 @@ public class GridManager : MonoBehaviour
 
     public IEnumerator GenerateGridFromLevel(ScriptableLevel level)
     {
+        DestroyGrid();
         width = level.width;
         height = level.height;
 
@@ -298,12 +299,14 @@ public class GridManager : MonoBehaviour
             var offsetX = startTilePosition.x > endTilePosition.x ? -1 : 1;
             var offsetY = startTilePosition.y > endTilePosition.y ? -1 : 1;
 
+            Debug.Log($"Start tile is {startTile.name}");
+            Debug.Log($"Attempting tile at {startTilePosition.x + offsetX}, {startTilePosition.y + offsetY}");
             var currentStepTile = GetTileAtPosition(new Vector2(startTilePosition.x + offsetX, startTilePosition.y + offsetY));
 
+            Debug.Log($"Step tile name" + currentStepTile.name);
             while(currentStepTile != endTile)
             {
                 tilesBetween.Add(currentStepTile);
-                Debug.Log(GetTileAtPosition(new Vector2(currentStepTile.GetPosition().x + offsetX, currentStepTile.GetPosition().y + offsetY)));
                 currentStepTile = GetTileAtPosition(new Vector2(currentStepTile.GetPosition().x + offsetX, currentStepTile.GetPosition().y + offsetY));
             }
         }
@@ -317,7 +320,6 @@ public class GridManager : MonoBehaviour
             while (currentStepTile != endTile)
             {
                 tilesBetween.Add(currentStepTile);
-                Debug.Log(new Vector2(currentStepTile.GetPosition().x + offsetX, currentStepTile.GetPosition().y + offsetY));
                 currentStepTile = GetTileAtPosition(new Vector2(currentStepTile.GetPosition().x - offsetX, currentStepTile.GetPosition().y - offsetY));
             }
         }
@@ -359,8 +361,27 @@ public class GridManager : MonoBehaviour
 
     public void InitialiseValues()
     {
+        Tile.hoveredTile = null;
+        Tile.goalTile = null;
+        Destroy(GameObject.Find("Highlight_Cross(Clone)"));
         width = PlayerPrefs.GetInt("width");
         height = PlayerPrefs.GetInt("height");
+    }
+
+    public void DestroyGrid()
+    {
+        Tile.hoveredTile = null;
+        Tile.goalTile = null;
+
+        if (tiles.Count > 0)
+        {
+            foreach(KeyValuePair<Vector2, Tile> Tile in tiles)
+            {
+                Destroy(Tile.Value.gameObject);
+            }
+            tiles.Clear();
+        }
+        highlightedTiles.Clear();
     }
 
     public int GetMaxGridSize()

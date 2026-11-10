@@ -21,6 +21,11 @@ public class BaseEnemy : MonoBehaviour
         transform.position = currentTile.GetPosition();
     }
 
+    private void Update()
+    {
+        Debug.Log($"CurrentTile is {currentTile}");
+    }
+
     public void ChangeState(EnemyState state)
     {
         enemyState = state;
@@ -60,9 +65,8 @@ public class BaseEnemy : MonoBehaviour
     public void SetTargetTile(Tile tile)
     {
         if(enemyState != EnemyState.Idle) { return; }
-        
-        targetTile = tile;
-        ChangeState(EnemyState.Moving);
+        if (tile == currentTile) { Debug.Log($"{name} trying to move to {tile.name}, already at {tile.name}"); ChangeState(EnemyState.Finished); return; }
+        targetTile = tile; ChangeState(EnemyState.Moving);
     }
 
     public void OnDeath()
@@ -85,19 +89,19 @@ public class BaseEnemy : MonoBehaviour
     private IEnumerator MoveThroughQueuedTiles()
     {
         //Debug.Log($"===Tiles in queue before check: {tileMoveQueue.Count}");
-        if (currentTile != null) { currentTile.RemoveEnemyFromTile(this); }
+        //if (currentTile != null) { currentTile.RemoveEnemyFromTile(this); }
 
-        if(tileMoveQueue.Count == 0 && targetTile != null && targetTile.Walkable)
-        {
-            while (Vector3.Distance(transform.position, targetTile.GetPosition()) > 0.1f)
-            {
-                transform.position = Vector3.Lerp(transform.position, targetTile.GetPosition(), walkSpeed * Time.deltaTime);
-                yield return null;
-            }
-            SetCurrentTile(targetTile);
-            ChangeState(EnemyState.Finished);
-            yield break;
-        }
+        //if(tileMoveQueue.Count == 0 && targetTile != null && targetTile.Walkable)
+        //{
+        //    while (Vector3.Distance(transform.position, targetTile.GetPosition()) > 0.1f)
+        //    {
+        //        transform.position = Vector3.Lerp(transform.position, targetTile.GetPosition(), walkSpeed * Time.deltaTime);
+        //        yield return null;
+        //    }
+        //    SetCurrentTile(targetTile);
+        //    ChangeState(EnemyState.Finished);
+        //    yield break;
+        //}
         var initialQueueCount = tileMoveQueue.Count;
         for (int i = 0; i < initialQueueCount; i++)
         {

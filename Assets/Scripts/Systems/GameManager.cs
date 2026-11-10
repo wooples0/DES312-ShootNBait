@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
 
     public GameState GameState;
 
+    [SerializeField] private List<ScriptableLevel> loadedLevels;
+    [SerializeField] private static int levelIndex;
+    [SerializeField] private bool resetLevelsOnLoad;
     [SerializeField] private ScriptableLevel levelToLoad;
     public ScriptableLevel level => levelToLoad;
     [SerializeField] private static List<ScriptableLevel> levels = new List<ScriptableLevel>();
@@ -23,6 +26,7 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
+        Debug.Log($"Loading levelIndex {levelIndex}");
         levels = Resources.LoadAll<ScriptableLevel>("Levels").ToList();
         ChangeState(GameState.InitialiseLevel);
     }
@@ -39,7 +43,7 @@ public class GameManager : MonoBehaviour
         {
             case GameState.InitialiseLevel:
                 GridManager.Instance.InitialiseValues();
-                StartCoroutine(GridManager.Instance.GenerateGridFromLevel(levelToLoad));
+                StartCoroutine(GridManager.Instance.GenerateGridFromLevel(loadedLevels[levelIndex]));
                 break;
             case GameState.SpawnEnemies:
                 ScoreManager.Instance.ResetAllValues();
@@ -58,7 +62,10 @@ public class GameManager : MonoBehaviour
                 break;
             
             case GameState.EndPhase:
-                ChangeState(EnemyManager.Instance.spawnedEnemies.Count == 0 ? GameState.SpawnEnemies : GameState.PlayerPhase);
+                if(levelIndex < loadedLevels.Count - 1) { levelIndex++; }
+                else { levelIndex = 0; }
+                SceneManager.LoadScene(0);
+                ChangeState(EnemyManager.Instance.spawnedEnemies.Count == 0 ? GameState.InitialiseLevel : GameState.PlayerPhase);
                 break;
             
             default:

@@ -1452,6 +1452,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   GameState: 0
+  loadedLevels:
+  - {fileID: 11400000, guid: 37960f5f1b5369f4ca60038602ca6cc3, type: 2}
+  - {fileID: 11400000, guid: eecf23e339412d8469718101badc9788, type: 2}
+  - {fileID: 11400000, guid: 8e8bdc882e8d3fa44842beaf9689152b, type: 2}
+  resetLevelsOnLoad: 1
   levelToLoad: {fileID: 11400000, guid: 9d1cd264963e75b4297e82ffca0f350a, type: 2}
 --- !u!1 &488126435
 GameObject:
