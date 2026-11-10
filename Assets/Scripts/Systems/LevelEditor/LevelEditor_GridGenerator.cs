@@ -24,7 +24,6 @@ public class LevelEditor_GridGenerator : MonoBehaviour
     private void Start()
     {
         cam = Camera.main;
-        GenerateGrid();
     }
     // Update is called once per frame
     void Update()
@@ -38,7 +37,7 @@ public class LevelEditor_GridGenerator : MonoBehaviour
         
         placedTiles = new Dictionary<Vector2, LevelEditor_Tile>();
 
-        Camera.main.transform.position = new Vector3((float)width / 2 - 0.5f, (float)height / 2 - 0.5f, -10);
+        Camera.main.transform.position = new Vector3((float)width / 2 - 0.5f, (float)height / 2f, -10);
         Camera.main.GetComponent<Camera>().orthographicSize = ((width + height) / 3.0f);
         for (int x = 0; x < width; x++)
         {
@@ -59,22 +58,30 @@ public class LevelEditor_GridGenerator : MonoBehaviour
 
         placedTiles = new Dictionary<Vector2, LevelEditor_Tile>();
 
-        cam.transform.position = new Vector3((float)level.width / 2 - 0.5f, (float)level.height / 2 - 0.5f, -10);
-        cam.GetComponent<Camera>().orthographicSize = ((level.width + level.height) / 3.0f);
+        Camera.main.transform.position = new Vector3((float)level.width / 2 - 0.5f, (float)level.height / 2f, -10);
+        Camera.main.GetComponent<Camera>().orthographicSize = ((level.width + level.height) / 3.0f);
+        
+        width = level.width;
+        height = level.height;
 
-        for (int x = 0; x < level.width; x++)
+        foreach(Tile_Data tileData in level.tileDataList)
         {
-            for (int y = 0; y < level.height; y++)
-            {
-                var spawnedTile = Instantiate(tile, new Vector2(x, y), Quaternion.identity);
-                spawnedTile.Init(x, y);
-                if(level.enemyLayout.TryGetValue(new Vector2(x, y), out var enemy))
-                {
-                    spawnedTile.ToggleEnemy();
+            var spawnedTile = Instantiate(tile, tileData.position, Quaternion.identity);
+            
+            if(tileData.type == TileType.Ground) { 
+                spawnedTile.type = TileType.Ground;
+                if (tileData.noOfEnemiesOnTile > 0) { 
+                    spawnedTile.enemyOnTile = true; 
                 }
-                placedTiles.Add(new Vector2(x, y), spawnedTile);
-
             }
+
+            else if(tileData.type == TileType.Wall) { 
+                spawnedTile.type = TileType.Wall; 
+            }
+            
+            spawnedTile.Init((int)tileData.position.x, (int)tileData.position.y);
+            placedTiles.Add(tileData.position, spawnedTile);
+            
         }
     }
 

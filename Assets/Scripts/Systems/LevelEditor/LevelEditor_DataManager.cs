@@ -31,6 +31,7 @@ public class LevelEditor_DataManager : MonoBehaviour
 
     public List<ScriptableLevel> GetLevels()
     {
+        UpdateSavedLevelsList();
         return savedLevels;
     }
 
@@ -39,10 +40,7 @@ public class LevelEditor_DataManager : MonoBehaviour
     public void SaveLevelToList(string name, Dictionary<Vector2, LevelEditor_Tile> tiles, int width, int height)
     {
         ScriptableLevel level = ScriptableObject.CreateInstance<ScriptableLevel>();
-        foreach(ScriptableLevel levels in savedLevels)
-        {
-            if(level.name == name) { AssetDatabase.DeleteAsset($"Assets/Resources/Levels/{level.name}.asset"); }
-        }
+        
         level.name = name;
         level.width = width;
         level.height = height;
@@ -51,26 +49,40 @@ public class LevelEditor_DataManager : MonoBehaviour
         {
             if(tiles.TryGetValue(key, out LevelEditor_Tile tile))
             {
-                if(tile.type == TileType.Ground)
+                Tile_Data t = new Tile_Data();
+                t.position = key;
+
+                if (tile.type == TileType.Ground)
                 {
-                    level.gridLayout.Add(key, 0);
+                    Debug.Log("tile type is ground");
+                    t.type = TileType.Ground;
                 }
                 else if(tile.type == TileType.Wall)
                 {
-                    level.gridLayout.Add(key, 1);
+                    Debug.Log("tile type is wall");
+                    t.type = TileType.Wall;
                 }
 
                 if (tile.enemyOnTile)
                 {
-                    level.enemyLayout.Add(key, 0);
+                    Debug.Log("tile has enemy");
+                    t.noOfEnemiesOnTile += 1;
                 }
+
+                level.tileDataList.Add(t);
             }
         }
 
+        Debug.Log($"Tile data list is {level.tileDataList.Count()} tiles long");
 
+        foreach (ScriptableLevel levels in savedLevels)
+        {
+            if (level.name == name) { AssetDatabase.DeleteAsset($"Assets/Resources/Levels/{level.name}.asset"); }
+        }
         AssetDatabase.CreateAsset(level, $"Assets/Resources/Levels/{level.name}.asset");
+        EditorUtility.SetDirty(level);
         AssetDatabase.SaveAssets();
-        savedLevels = Resources.LoadAll<ScriptableLevel>("Levels").ToList();
+        UpdateSavedLevelsList();
     }
 #endif
 }

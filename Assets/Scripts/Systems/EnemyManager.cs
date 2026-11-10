@@ -15,25 +15,33 @@ public class EnemyManager : MonoBehaviour
     private List<ScriptableEnemy> enemies = new List<ScriptableEnemy>();
     public List<BaseEnemy> spawnedEnemies = new List<BaseEnemy>();
 
+    public static List<Tile> enemySpawnQueue = new List<Tile>();
+
     private int noOfEnemiesToSpawn = 0;
+
+    
 
     private void Awake()
     {
         Instance = this;
 
         enemies = Resources.LoadAll<ScriptableEnemy>("Enemies").ToList();
+        enemySpawnQueue.Clear();
     }
     private void Start()
     {
         
     }
 
-    public void SpawnEnemy(int i)
+    public void SpawnEnemy(Tile spawnTile)
     {
-        
-        var spawnPos = GridManager.Instance.GetRandomTile().GetPosition();
-        var spawnedEnemy = Instantiate(enemies[Random.Range(0, enemies.Count)].enemyPrefab, spawnPos, enemies[0].enemyPrefab.transform.rotation);
-        spawnedEnemy.GetComponent<BaseEnemy>().currentTile = GridManager.Instance.GetTileAtPosition(spawnPos);
+        var spawnPos = spawnTile.GetPosition();
+        if (spawnPos == null) { Debug.Log($"{spawnTile.name} position is null"); }
+        var prefabToSpawn = enemies[0].enemyPrefab;
+        if (prefabToSpawn == null) { Debug.Log($"enemy prefab null"); }
+
+        var spawnedEnemy = Instantiate(prefabToSpawn, spawnPos, prefabToSpawn.transform.rotation);
+        spawnedEnemy.GetComponent<BaseEnemy>().currentTile = GridManager.Instance.GetTileAtPosition(spawnTile.GetPosition());
         spawnedEnemies.Add(spawnedEnemy.GetComponent<BaseEnemy>());
         spawnedEnemy.GetComponent<BaseEnemy>().currentTile.AddEnemyToTile(spawnedEnemy.GetComponent<BaseEnemy>());
         spawnedEnemy.name = $"Enemy {spawnedEnemies.Count}";
@@ -41,46 +49,83 @@ public class EnemyManager : MonoBehaviour
 
     public IEnumerator SpawnNextWave()
     {
-        noOfEnemiesToSpawn = (int)Mathf.Ceil(GridManager.Instance.size * 3f);
-        for (int i = 0; i < noOfEnemiesToSpawn; i++)
+        if(enemySpawnQueue.Count == 0)
         {
-            Random.InitState(42+i);
-            SpawnEnemy(0);
-            yield return new WaitForSeconds(0.005f);
+            noOfEnemiesToSpawn = (int)Mathf.Ceil(GridManager.Instance.GetMaxGridSize() * 3f);
+            for (int i = 0; i < noOfEnemiesToSpawn; i++)
+            {
+                Random.InitState(42 + i);
+                SpawnEnemy(GridManager.Instance.GetRandomTile());
+                yield return new WaitForSeconds(0.005f);
+            }
+            GameManager.Instance.ChangeState(GameState.PlayerPhase);
+            yield return null;
         }
-        GameManager.Instance.ChangeState(GameState.PlayerPhase);
-        yield return null;
+        else
+        {
+            for(int i = 0; i < enemySpawnQueue.Count; i++)
+            {
+                SpawnEnemy(enemySpawnQueue[i]);
+                yield return new WaitForSeconds(0.005f);
+            }
+            GameManager.Instance.ChangeState(GameState.PlayerPhase);
+            yield return null;
+        }
+        
+    }
+
+    public static void AddEnemyToSpawnQueue(Tile spawnTile)
+    {
+        enemySpawnQueue.Add(spawnTile);
     }
 
     public IEnumerator SetEnemiesOnTiles(Tile targetTile, List<Tile> highlightedTiles)
     {
         List<BaseEnemy> enemiesToMove = new List<BaseEnemy>();
+        
+        //Debug.Log($"No. of highlighted tiles: {highlightedTiles.Count}");
         foreach(BaseEnemy enemy in spawnedEnemies)
         {
+
             foreach(Tile tile in highlightedTiles)
+
             {
                 if(enemy.currentTile == tile)
                 {
-                    enemy.SetTargetTile(targetTile);
+                    //Debug.Log($"{enemy.name} on tile {tile.name}");
                     enemiesToMove.Add(enemy);
                 }
             }
         }
-        if(enemiesToMove.Count == 0)
+        //Debug.Log($"Enemies to move = {enemiesToMove.Count}");
+
+        if (enemiesToMove.Count == 0)
         {
             GameManager.Instance.ChangeState(GameState.PlayerPhase);
             yield break;
         }
+
+        for (int i = 0; i < enemiesToMove.Count; i++)
+        {
+            var tileList = GridManager.Instance.GetTilesBetween(GunManager.Instance.lastBaitUsed, enemiesToMove[i].GetTile(), targetTile);
+            //Debug.Log($"{enemiesToMove[i].name} has {tileList.Count} tiles to move");
+            enemiesToMove[i].AddTileListToMoveQueue(tileList);
+            enemiesToMove[i].SetTargetTile(targetTile);
+        }
+
         var allEnemiesMoved = false;
+
         while (!allEnemiesMoved)
         {
             foreach (BaseEnemy enemy in enemiesToMove)
             {
                 allEnemiesMoved = true;
-                if(enemy.targetTile != null) { allEnemiesMoved = false; }
+                if(!enemy.IsFinishedMoving()) { allEnemiesMoved = false; }
+                yield return null;
             }
             yield return null;
         }
+        //Debug.Log("All enemies finished moving");
         GameManager.Instance.ChangeState(GameState.PlayerPhase);
         yield return null;
     }
@@ -97,14 +142,14 @@ public class EnemyManager : MonoBehaviour
         {
             enemiesToKill[i].OnDeath();
         }
-        if(spawnedEnemies.Count > 0) { StartCoroutine(MoveAllEnemiesAwayFromTargetTile()); }
+        //if(spawnedEnemies.Count > 0) { StartCoroutine(MoveAllEnemiesAwayFromTargetTile()); }
         GameManager.Instance.ChangeState(GameState.EndPhase);
     }
 
     public void OnDebug_SpawnEnemy(InputAction.CallbackContext ctx)
     {
         if (!ctx.started) { return; }
-        SpawnEnemy(0);
+        SpawnEnemy(GridManager.Instance.GetRandomTile());
 
     }
 
@@ -149,7 +194,7 @@ public class EnemyManager : MonoBehaviour
         GameManager.Instance.ChangeState(GameState.MovePhase);
         foreach(BaseEnemy enemy in spawnedEnemies)
         {
-            var targetTile = GunManager.Instance.targetTile;
+            var targetTile = Tile.hoveredTile;
             if(targetTile != null) { enemy.SetTargetTile(targetTile); }
             else
             {yield break;}
@@ -172,7 +217,7 @@ public class EnemyManager : MonoBehaviour
     public IEnumerator MoveAllEnemiesAwayFromTargetTile()
     {
         GameManager.Instance.ChangeState(GameState.MovePhase);
-        var targetTilePos = GunManager.Instance.targetTile.GetPosition();
+        var targetTilePos = Tile.hoveredTile.GetPosition();
         foreach(BaseEnemy enemy in spawnedEnemies)
         {
             if(enemy.transform.position.x < targetTilePos.x && enemy.transform.position.y == targetTilePos.y)
@@ -181,7 +226,7 @@ public class EnemyManager : MonoBehaviour
                 var offset = -1;
                 var axis = Axis.Horizontal;
                 
-                var tileAtLeft = GridManager.Instance.GetAdjacentTile(axis, enemy.currentTile.GetPosition(), offset);
+                var tileAtLeft = GridManager.Instance.GetAdjacentTile(axis, enemy.currentTile, offset);
                 
                 if (tileAtLeft != null) { enemy.SetTargetTile(tileAtLeft);}
                 continue;
@@ -192,7 +237,7 @@ public class EnemyManager : MonoBehaviour
                 var offset = 1;
                 var axis = Axis.Horizontal;
                 
-                var tileAtRight = GridManager.Instance.GetAdjacentTile(axis, enemy.currentTile.GetPosition(), offset);
+                var tileAtRight = GridManager.Instance.GetAdjacentTile(axis, enemy.currentTile, offset);
                 
                 if (tileAtRight != null) { enemy.SetTargetTile(tileAtRight); }
                 continue;
@@ -204,7 +249,7 @@ public class EnemyManager : MonoBehaviour
                 var offset = 1;
                 var axis = Axis.Vertical;
 
-                var tileAtTop = GridManager.Instance.GetAdjacentTile(axis, enemy.currentTile.GetPosition(), offset);
+                var tileAtTop = GridManager.Instance.GetAdjacentTile(axis, enemy.currentTile, offset);
 
                 if (tileAtTop != null) { enemy.SetTargetTile(tileAtTop); }
             }
@@ -214,7 +259,7 @@ public class EnemyManager : MonoBehaviour
                 var offset = -1;
                 var axis = Axis.Vertical;
 
-                var tileAtBottom = GridManager.Instance.GetAdjacentTile(axis, enemy.currentTile.GetPosition(), offset);
+                var tileAtBottom = GridManager.Instance.GetAdjacentTile(axis, enemy.currentTile, offset);
 
                 if (tileAtBottom != null) { enemy.SetTargetTile(tileAtBottom); }
             }
@@ -225,7 +270,7 @@ public class EnemyManager : MonoBehaviour
                 var offset = 1;
                 var axis = Axis.DiagonalR;
 
-                var tileAtDiagonalUpRight = GridManager.Instance.GetAdjacentTile(axis, enemy.currentTile.GetPosition(), offset);
+                var tileAtDiagonalUpRight = GridManager.Instance.GetAdjacentTile(axis, enemy.currentTile, offset);
 
                 if(tileAtDiagonalUpRight != null) { enemy.SetTargetTile(tileAtDiagonalUpRight); }
             }
@@ -235,7 +280,7 @@ public class EnemyManager : MonoBehaviour
                 var offset = -1;
                 var axis = Axis.DiagonalR;
 
-                var tileAtDiagonalDownLeft = GridManager.Instance.GetAdjacentTile(axis, enemy.currentTile.GetPosition(), offset);
+                var tileAtDiagonalDownLeft = GridManager.Instance.GetAdjacentTile(axis, enemy.currentTile, offset);
 
                 if (tileAtDiagonalDownLeft != null) { enemy.SetTargetTile(tileAtDiagonalDownLeft); }
             }
@@ -247,7 +292,7 @@ public class EnemyManager : MonoBehaviour
                 var offset = -1;
                 var axis = Axis.DiagonalL;
 
-                var tileAtDiagonalUpLeft = GridManager.Instance.GetAdjacentTile(axis, enemy.currentTile.GetPosition(), offset);
+                var tileAtDiagonalUpLeft = GridManager.Instance.GetAdjacentTile(axis, enemy.currentTile, offset);
 
                 if (tileAtDiagonalUpLeft != null) { enemy.SetTargetTile(tileAtDiagonalUpLeft); }
             }
@@ -257,7 +302,7 @@ public class EnemyManager : MonoBehaviour
                 var offset = 1;
                 var axis = Axis.DiagonalL;
 
-                var tileAtDiagonalDownRight = GridManager.Instance.GetAdjacentTile(axis, enemy.currentTile.GetPosition(), offset);
+                var tileAtDiagonalDownRight = GridManager.Instance.GetAdjacentTile(axis, enemy.currentTile, offset);
 
                 if (tileAtDiagonalDownRight != null) { enemy.SetTargetTile(tileAtDiagonalDownRight); }
             }

@@ -18,8 +18,6 @@ public class GunManager : MonoBehaviour
         }
     }
 
-    public Tile targetTile;
-
     public List<Tile> targetedTiles = new List<Tile>();
 
     private void Awake()
@@ -28,12 +26,14 @@ public class GunManager : MonoBehaviour
     }
     private void Start()
     {
-        isGunEquipped = true;
+        if (SettingsManager.Instance.mode == GameMode.Default) { isGunEquipped = true; }
+        else { isGunEquipped = false; }
         equippedBait = Axis.Horizontal;
         lastBaitUsed = Axis.None;
     }
     public void OnEquipGun(InputAction.CallbackContext ctx)
     {
+        if (SettingsManager.Instance.mode == GameMode.Limited) { return; }
         if (GameManager.Instance.GameState != GameState.PlayerPhase) { return; }
         if (!ctx.started) { return; }
         if (isGunEquipped) { isGunEquipped = false; return; }
@@ -78,21 +78,45 @@ public class GunManager : MonoBehaviour
     {
         if (GameManager.Instance.GameState != GameState.PlayerPhase) { return; }
         if (!ctx.started) { return; }
-        if(targetTile == null) {  return; }
-
-        if (isGunEquipped )
+        if (Tile.hoveredTile == null || !HoveringShootableTile()) {  return; }
+       
+        if (isGunEquipped)
         {
-            ScoreManager.Instance.IncrementBulletsUsed(1);
-            GameManager.Instance.ChangeState(GameState.ShootPhase);
-        }
-        else
-        {
-            if(targetTile.GetEnemiesOnTile().Count > 0 || equippedBait == lastBaitUsed)
+            if(Tile.hoveredTile.GetEnemiesOnTile().Count == 0)
             {
                 return;
             }
+
+            ScoreManager.Instance.IncrementBulletsUsed(1);
+            GameManager.Instance.ChangeState(GameState.ShootPhase);
+            
+        }
+        else
+        {
+            if(Tile.hoveredTile.GetEnemiesOnTile().Count > 0 || equippedBait == lastBaitUsed)
+            {
+                return;
+            }
+
+            var enemyCount = 0;
+            foreach(var tile in targetedTiles)
+            {
+                if(tile.GetEnemiesOnTile().Count > 0)
+                {
+                    enemyCount += tile.GetEnemiesOnTile().Count;
+                }
+            }
+            if (enemyCount == 0) { return; }
             OnBait();
         }
+    }
+
+    public void OnShootAlternate(InputAction.CallbackContext ctx)
+    {
+        if(SettingsManager.Instance.mode == GameMode.Default) { return; }
+        if (!ctx.started) { return; }
+        ScoreManager.Instance.IncrementBulletsUsed(1);
+        GameManager.Instance.ChangeState(GameState.ShootPhase);
     }
 
     public void OnBait()
@@ -100,11 +124,15 @@ public class GunManager : MonoBehaviour
         ScoreManager.Instance.IncrementBaitUsed(1);
         GameManager.Instance.ChangeState(GameState.MovePhase);
         lastBaitUsed = equippedBait;
-        StartCoroutine(EnemyManager.Instance.SetEnemiesOnTiles(targetTile, targetedTiles));
+        StartCoroutine(EnemyManager.Instance.SetEnemiesOnTiles(Tile.hoveredTile, targetedTiles));
     }
 
-    
+    private bool HoveringShootableTile()
+    {
+        return Tile.hoveredTile.GetComponent<GroundTile>() != null;
+    }
 }
+
 
 public enum Axis
 {

@@ -6,42 +6,54 @@ using TMPro;
 
 public abstract class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    public static Tile hoveredTile;
+    public static Tile goalTile;
+
     [SerializeField] protected SpriteRenderer renderer;
     [SerializeField] private GameObject h_Crosshair, h_Selected, h_Nope, h_Arrows;
     [SerializeField] protected TMP_Text positionLabel;
     [SerializeField] protected TMP_Text countLabel;
 
     [SerializeField] private List<BaseEnemy> enemiesOnTile = new List<BaseEnemy>();
-    [SerializeField] private bool IsWalkable;
+    [SerializeField] protected bool IsWalkable;
     public bool Walkable => IsWalkable;
+
+    void Awake()
+    {
+    }
 
     public virtual void Init(int x, int y)
     {
         positionLabel.text = ($"{x.ToString()},{y.ToString()}");
+
     }
 
     private void Update()
     {
+        if (Tile.goalTile == this) 
+        {
+            SetHighlight(HighlightType.Crosshair, true);
+        }
     }
 
     public virtual void OnPointerEnter(PointerEventData eventData)
     {
-        GunManager.Instance.targetTile = this;
+        Tile.hoveredTile = this;
 
 
 
     }
     public virtual void OnPointerExit(PointerEventData eventData)
     {
-        if(GunManager.Instance.targetTile == this)
-        {
-            GunManager.Instance.targetTile = null;
-        }
+        //if(Tile.hoveredTile == this)
+        //{
+        //    Tile.hoveredTile = null;
+        //}
     }
 
     public Vector2 GetPosition()
     {
-        return new Vector2(transform.position.x, transform.position.y);
+        return new Vector2((int)transform.position.x, (int)transform.position.y);
     }
 
     public List<BaseEnemy> GetEnemiesOnTile()
@@ -53,15 +65,13 @@ public abstract class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         if(enemiesOnTile.Contains(enemy))
         {
-            //Debug.Log("Enemy already exists in list");
+            
         }
         else
         {
-            //Debug.Log($"Adding {enemy.name} to list.");
+            
             enemiesOnTile.Add(enemy);
-            countLabel.text = enemiesOnTile.Count.ToString();
-            countLabel.color = new Color(countLabel.color.r, countLabel.color.g, countLabel.color.b, countLabel.color.a + 0.2f);
-            //Debug.Log($"Count now {enemiesOnTile.Count.ToString()}");
+            UpdateEnemyCountLabel();
         }
     }
 
@@ -71,15 +81,33 @@ public abstract class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         {
             //Debug.Log($"Removing {enemy.name} from list.");
             enemiesOnTile.Remove(enemy);
-            countLabel.text = enemiesOnTile.Count.ToString();
-            countLabel.color = new Color(countLabel.color.r, countLabel.color.g, countLabel.color.b, countLabel.color.a - 0.2f);
-            if(enemiesOnTile.Count == 0) { countLabel.color = new Color(countLabel.color.r, countLabel.color.g, countLabel.color.b, 0.2f); }
+            UpdateEnemyCountLabel();
             //Debug.Log($"Count now {enemiesOnTile.Count.ToString()}");
         }
         else
         {
             //Debug.Log("Enemy not found in list");
         }
+    }
+
+    public void UpdateEnemyCountLabel()
+    {
+        if (!SettingsManager.Instance.showEnemyCountOnTiles)
+        {
+            countLabel.text = string.Empty;
+            return;
+        }
+        if(enemiesOnTile.Count == 0)
+        {
+            countLabel.text = "0";
+            countLabel.gameObject.SetActive(false);
+            return;
+        }
+
+        if (!countLabel.gameObject.activeSelf) { countLabel.gameObject.SetActive(true); }
+
+        countLabel.text = enemiesOnTile.Count.ToString();
+
     }
     public void SetHighlight(HighlightType h_Type, bool value)
     {
@@ -95,13 +123,13 @@ public abstract class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                 //Bait NOT able to be used
                 { 
                     h_Selected.GetComponent<SpriteRenderer>().color = new Color(1, 0, 0, 0.2f);
-                    if (GunManager.Instance.targetTile == this) { SetHighlight(HighlightType.Nope, true); }
+                    if (Tile.hoveredTile == this) { SetHighlight(HighlightType.Nope, true); }
                 }
                 else
                 //Bait able to be used
                 { 
                     h_Selected.GetComponent<SpriteRenderer>().color = new Color(1, 1f, 0, 0.2f);
-                    if (GunManager.Instance.targetTile == this) { SetHighlight(HighlightType.Arrows, true); }
+                    if (Tile.hoveredTile == this) { SetHighlight(HighlightType.Arrows, true); }
                     switch (GunManager.Instance.equippedBait)
                     {
                         case Axis.Vertical:
@@ -130,8 +158,16 @@ public abstract class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         }
     }
 
+    public void ClearAllHighlightsOnTile()
+    {
+        if (h_Crosshair != null) h_Crosshair.SetActive(false);
+        if (h_Selected != null) h_Selected.SetActive(false);
+        if (h_Arrows != null) h_Arrows.SetActive(false);
+        if (h_Nope != null) h_Nope.SetActive(false);
+    }
 }
 
+[System.Serializable]
 public enum HighlightType
 {
     Crosshair = 0,

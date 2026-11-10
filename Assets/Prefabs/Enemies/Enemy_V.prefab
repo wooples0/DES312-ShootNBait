@@ -122,7 +122,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8079437663079053251}
   - component: {fileID: 582012058923559996}
-  - component: {fileID: 7801217368336597282}
+  - component: {fileID: 4961627261626354900}
   m_Layer: 2
   m_Name: Enemy_V
   m_TagString: Untagged
@@ -158,30 +158,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b28b0b62f8f667f4f85e9c2f5386d6e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy1
+  tileMoveQueue: []
   currentTile: {fileID: 0}
   targetTile: {fileID: 0}
   enemyState: 0
   walkSpeed: 20
---- !u!136 &7801217368336597282
-CapsuleCollider:
+--- !u!95 &4961627261626354900
+Animator:
+  serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7314560896546432216}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c7af509ec0fb31d478de23c121b4e3b5, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

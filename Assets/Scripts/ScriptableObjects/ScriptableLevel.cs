@@ -6,9 +6,20 @@ using System.Collections.Generic;
 public class ScriptableLevel : ScriptableObject
 {
     public int id;
-    public int width;
-    public int height;
-    public Dictionary<Vector2, int> gridLayout = new Dictionary<Vector2, int>();
-    public Dictionary<Vector2, int> enemyLayout = new Dictionary<Vector2, int>();
+    public int width = 0;
+    public int height = 0;
+
+    public List<Tile_Data> tileDataList = new List<Tile_Data>();
+    public List<Vector2> shootPositions = new List<Vector2>();
+
+    public Vector2 shootTilePosition;
+}
+
+[System.Serializable]
+public struct Tile_Data
+{
+    public Vector2 position;
+    public TileType type;
+    public int noOfEnemiesOnTile;
 
 }

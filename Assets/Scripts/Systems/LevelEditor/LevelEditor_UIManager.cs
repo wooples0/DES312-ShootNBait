@@ -58,29 +58,24 @@ public class LevelEditor_UIManager : MonoBehaviour
 
         LevelEditor_GridGenerator.Instance.width = gridSizeDropdown.value + LevelEditor_GridGenerator.Instance.minGridSize;
         LevelEditor_GridGenerator.Instance.height = gridSizeDropdown.value + LevelEditor_GridGenerator.Instance.minGridSize;
-        LevelEditor_GridGenerator.Instance.GenerateGrid();
     }
 
     public void SetTilesInGridToDefault()
     {
-        LevelEditor_GridGenerator.Instance.DefaultAllTiles();
+        //LevelEditor_GridGenerator.Instance.DefaultAllTiles();
     }
 
     public void ButtonPressed_LoadLevel()
     {
-        LevelEditor_GridGenerator.Instance.LoadGrid(levels[levelDropdown.value]);
-        gridSizeDropdown.value = levels[levelDropdown.value].width - LevelEditor_GridGenerator.Instance.minGridSize;
+        selectedLevel = levels[levelDropdown.value];
+        LevelEditor_GridGenerator.Instance.LoadGrid(selectedLevel);
+        Debug.Log($"Loading {selectedLevel.name}");
         loadLevelText.GetComponent<FadeText>().Fade(0, 1f);
-    }
-    public void DropdownValueChanged_LoadLevel()
-    {
-        ButtonPressed_LoadLevel();
     }
 
     public void ButtonPressed_SaveLevel()
     {
-        if(saveLevelName == string.Empty || saveLevelName == null) { return; }
-        if (!loadLevelButton.gameObject.activeSelf) { loadLevelButton.gameObject.SetActive(true); levelDropdown.gameObject.SetActive(true); ReloadLevelList(); }
+        if (saveLevelName == string.Empty) { Debug.Log("Saved name cannot be null"); return; }
         LevelEditor_DataManager.Instance.SaveLevelToList(saveLevelName, LevelEditor_GridGenerator.Instance.GetTiles(), LevelEditor_GridGenerator.Instance.width, LevelEditor_GridGenerator.Instance.height);
         saveLevelText.GetComponent<FadeText>().Fade(0, 1f);
         ReloadLevelList();
@@ -101,12 +96,6 @@ public class LevelEditor_UIManager : MonoBehaviour
         levels = LevelEditor_DataManager.Instance.GetLevels();
         Debug.Log(levels.Count);
 
-        if (levels.Count == 0)
-        {
-            levelDropdown.gameObject.SetActive(false);
-            loadLevelButton.gameObject.SetActive(false);
-            return;
-        }
         levelDropdown.ClearOptions();
         levelDropdown.gameObject.SetActive(true);
         loadLevelButton.gameObject.SetActive(true);
@@ -118,7 +107,7 @@ public class LevelEditor_UIManager : MonoBehaviour
                     $"{levels[i].name}", null, Color.white));
         }
 
-        selectedLevel = levels[levels.Count - 1];
+        levelDropdown.value = levelDropdown.options.Count - 1;
 
     }
 

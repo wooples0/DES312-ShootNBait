@@ -30,7 +30,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3640890213272104183, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
       propertyPath: m_fontColor32.rgba
-      value: 855638271
+      value: 855698431
       objectReference: {fileID: 0}
     - target: {fileID: 5264612365306357372, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -98,11 +98,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
---- !u!1 &1700758078351075284 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7987784668837081430, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
-  m_PrefabInstance: {fileID: 8736985079989245570}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5415565957032160290 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3632141177756334752, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
@@ -120,10 +115,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f79e29871f7e3847b6e485fa7c9502f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WallTile
-  mousing: 0
   renderer: {fileID: 7941410767169571153}
-  highlight: {fileID: 1700758078351075284}
-  highlight2: {fileID: 5723230582442726959}
+  h_Crosshair: {fileID: 0}
+  h_Selected: {fileID: 0}
+  h_Nope: {fileID: 6036197546116496792}
+  h_Arrows: {fileID: 0}
   positionLabel: {fileID: 1063540098238552207}
   countLabel: {fileID: 5460346233273072245}
   enemiesOnTile: []
@@ -139,9 +135,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
---- !u!1 &5723230582442726959 stripped
+--- !u!1 &6036197546116496792 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 3903774560310460589, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+  m_CorrespondingSourceObject: {fileID: 3063819989317200666, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
   m_PrefabInstance: {fileID: 8736985079989245570}
   m_PrefabAsset: {fileID: 0}
 --- !u!212 &7941410767169571153 stripped

@@ -10,6 +10,7 @@ public class GroundTile : Tile
         positionLabel.text = ($"{x.ToString()},{y.ToString()}");
         var isOffset = (x + y) % 2 == 1;
         renderer.color = isOffset ? offsetColour : baseColour;
+        IsWalkable = true;
     }
     void Start()
     {
@@ -20,4 +21,6 @@ public class GroundTile : Tile
     {
         
     }
+
+
 }

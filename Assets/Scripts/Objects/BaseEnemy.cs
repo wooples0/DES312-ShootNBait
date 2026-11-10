@@ -1,9 +1,12 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.VFX;
+using System.Collections.Generic;
+using System.Linq;
 
 public class BaseEnemy : MonoBehaviour
 {
+    public List<Tile> tileMoveQueue;
     public Tile currentTile;
     public Tile targetTile;
 
@@ -28,10 +31,9 @@ public class BaseEnemy : MonoBehaviour
                 break;
             case EnemyState.Moving:
                 //Debug.Log("Starting coroutine");
-                StartCoroutine(MoveToTile());
+                StartCoroutine(MoveThroughQueuedTiles());
                 break;
             case EnemyState.Finished:
-                SetCurrentTile(targetTile);
                 ChangeState(EnemyState.Idle);
                 break;
         }
@@ -50,7 +52,7 @@ public class BaseEnemy : MonoBehaviour
     public void SetCurrentTile(Tile tile)
     {
         //Debug.Log($"{this.name} is setting current tile to {tile.name}");
-        
+        if (currentTile != null) { currentTile.RemoveEnemyFromTile(this); }
         currentTile = tile;
         currentTile.AddEnemyToTile(this);
         transform.position = currentTile.GetPosition();
@@ -58,6 +60,7 @@ public class BaseEnemy : MonoBehaviour
     public void SetTargetTile(Tile tile)
     {
         if(enemyState != EnemyState.Idle) { return; }
+        
         targetTile = tile;
         ChangeState(EnemyState.Moving);
     }
@@ -79,28 +82,103 @@ public class BaseEnemy : MonoBehaviour
     //    yield return null;
     //}
 
-    private IEnumerator MoveToTile()
+    private IEnumerator MoveThroughQueuedTiles()
     {
+        //Debug.Log($"===Tiles in queue before check: {tileMoveQueue.Count}");
         if (currentTile != null) { currentTile.RemoveEnemyFromTile(this); }
-        while (Vector3.Distance(new Vector3(transform.position.x, transform.position.y), targetTile.GetPosition()) >= 0.1f)
+
+        if(tileMoveQueue.Count == 0 && targetTile != null && targetTile.Walkable)
         {
-            transform.position = Vector3.Lerp(transform.position, targetTile.GetPosition(), walkSpeed * Time.deltaTime);
-            yield return null;
+            while (Vector3.Distance(transform.position, targetTile.GetPosition()) > 0.1f)
+            {
+                transform.position = Vector3.Lerp(transform.position, targetTile.GetPosition(), walkSpeed * Time.deltaTime);
+                yield return null;
+            }
+            SetCurrentTile(targetTile);
+            ChangeState(EnemyState.Finished);
+            yield break;
         }
-        //yield return new WaitUntil(() => new Vector2() == targetTile.GetPosition());
+        var initialQueueCount = tileMoveQueue.Count;
+        for (int i = 0; i < initialQueueCount; i++)
+        {
+            var tile = tileMoveQueue[i];
+            if (tile.Walkable)
+            {
+                
+            }
+            else
+            {
+                //Debug.Log($"Found wall tile at index [{i}], removing index [{i}] and tiles after.");
+                for(int j = 0; j < initialQueueCount - i; j++)
+                {
+                    Debug.Log($"~Removing {tileMoveQueue[i].name} from queue");
+                    tileMoveQueue.RemoveAt(i);
+                }
+                break;
+            }
+        }
+
+        //Debug.Log($"{this.name} is moving [{tileMoveQueue.Count}] tiles.\n");
+
+        if (tileMoveQueue.Count == 0)
+        {
+            tileMoveQueue.Clear();
+            ChangeState(EnemyState.Finished);
+            yield break;
+        }
+
         
+        for(int i = 0; i < tileMoveQueue.Count; i++)
+        {
+            var currentTargetTile = tileMoveQueue[i];
+
+            while(Vector3.Distance(transform.position, currentTargetTile.GetPosition()) > 0.1f)
+            {
+                transform.position = Vector3.Lerp(transform.position, currentTargetTile.GetPosition(), walkSpeed * Time.deltaTime);
+                yield return null;
+            }
+            SetCurrentTile(currentTargetTile);
+            yield return new WaitForSeconds(0.0025f);
+            
+        }
+
+        tileMoveQueue.Clear();
         ChangeState(EnemyState.Finished);
+
     }
-    public enum EnemyState
+    public IEnumerator MoveToTile()
     {
-        Idle,
-        Moving,
-        Finished,
-        Dead
+        yield return null;
     }
+    public void AddTileListToMoveQueue(List<Tile> tileList)
+    {
+        foreach(var tile in tileList)
+        {
+            tileMoveQueue.Add(tile);
+        }
+    }
+
+    public void AddTileToMoveQueue(Tile tile)
+    {
+        tileMoveQueue.Add(tile);
+    }
+
+    public bool IsFinishedMoving()
+    {
+        return tileMoveQueue.Count == 0 && targetTile == null;
+    }
+    
 
     private Vector2 GetPosition()
     {
         return new Vector2(transform.position.x, transform.position.y);
     }
+}
+public enum EnemyState
+{
+    Idle,
+    Moving,
+    TileQueueCheck,
+    Finished,
+    Dead
 }

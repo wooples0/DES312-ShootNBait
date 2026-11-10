@@ -31,7 +31,7 @@ public class UIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (debugEnabled) { UpdateDebugUI(); }
+        if (SettingsManager.Instance.debugEnabled) { UpdateDebugUI(); }
     }
 
     void UpdateDebugUI()
@@ -100,9 +100,9 @@ public class UIManager : MonoBehaviour
             }
         }
 
-        if (GunManager.Instance.targetTile != null)
+        if (Tile.hoveredTile != null)
         {
-            var targetTilePos = GunManager.Instance.targetTile.GetPosition();
+            var targetTilePos = Tile.hoveredTile.GetPosition();
             targetTileText.text = $"X({targetTilePos.x}) Y({targetTilePos.y})";
         }
         else

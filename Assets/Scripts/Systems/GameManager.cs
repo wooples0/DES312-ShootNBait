@@ -2,19 +2,28 @@ using UnityEngine;
 using System;
 using UnityEngine.XR;
 using UnityEngine.SceneManagement;
-
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine.UIElements;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
     public GameState GameState;
 
+    [SerializeField] private ScriptableLevel levelToLoad;
+    public ScriptableLevel level => levelToLoad;
+    [SerializeField] private static List<ScriptableLevel> levels = new List<ScriptableLevel>();
+
+
     private void Awake()
     {
         Instance = this;
+        
     }
     void Start()
     {
+        levels = Resources.LoadAll<ScriptableLevel>("Levels").ToList();
         ChangeState(GameState.InitialiseLevel);
     }
 
@@ -29,13 +38,9 @@ public class GameManager : MonoBehaviour
         switch (newState)
         {
             case GameState.InitialiseLevel:
-                StartCoroutine(GridManager.Instance.GenerateGrid
-                    (
-                    GridManager.Instance.size, 
-                    GridManager.Instance.size)
-                    );
+                GridManager.Instance.InitialiseValues();
+                StartCoroutine(GridManager.Instance.GenerateGridFromLevel(levelToLoad));
                 break;
-
             case GameState.SpawnEnemies:
                 ScoreManager.Instance.ResetAllValues();
                 GunManager.Instance.lastBaitUsed = Axis.None;
@@ -48,7 +53,8 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.ShootPhase:
-                if (GunManager.Instance.targetTile != null) { EnemyManager.Instance.KillEnemiesOnTile(GunManager.Instance.targetTile); }
+                if(SettingsManager.Instance.mode == GameMode.Limited) { Tile.hoveredTile = Tile.goalTile; }
+                if (Tile.hoveredTile != null) { EnemyManager.Instance.KillEnemiesOnTile(Tile.hoveredTile); }
                 break;
             
             case GameState.EndPhase:
@@ -62,6 +68,28 @@ public class GameManager : MonoBehaviour
     public void ReloadLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    private ScriptableLevel GetLevelByName(string levelName)
+    {
+        foreach(ScriptableLevel level in levels)
+        {
+            if(level.name == levelName) return level;
+        }
+
+        Debug.Log($"Could not find level of name: {levelName}");
+        return null;
+    }
+
+    private ScriptableLevel GetLevelByID(int levelID)
+    {
+        foreach (ScriptableLevel level in levels)
+        {
+            if (level.id == levelID) return level;
+        }
+
+        Debug.Log($"Could not find level of ID: {levelID}");
+        return null;
     }
 }
 

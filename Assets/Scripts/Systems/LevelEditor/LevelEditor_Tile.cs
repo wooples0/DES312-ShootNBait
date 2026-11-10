@@ -22,7 +22,10 @@ public class LevelEditor_Tile : MonoBehaviour, IPointerEnterHandler, IPointerExi
     {
         var isOffset = (x + y) % 2 == 1;
         renderer.color = isOffset ? offsetColour : baseColour;
+        if(type == TileType.None) { type = TileType.Ground; }
         if (enemyOnTile) { enemyOnTileText.text = "Enemy"; }
+        if (type == TileType.Wall) { tileIsWallText.text = "Wall"; }
+        Debug.Log($"Tile at [{transform.position}] initialised as {type}");
     }
     public void OnPointerEnter(PointerEventData eventData)
     {

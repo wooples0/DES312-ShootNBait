@@ -100,6 +100,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -34846503385030661, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+      propertyPath: m_Size.z
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1278711086325934883, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
       propertyPath: m_Color.a
       value: 0.78431374
@@ -297,7 +301,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26dc766fe62acb64a8b1c4c0e87e3adc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GroundTile
-  mousing: 0
   renderer: {fileID: 6709046391553888985}
   h_Crosshair: {fileID: 2644900886304308316}
   h_Selected: {fileID: 8953757241296801191}

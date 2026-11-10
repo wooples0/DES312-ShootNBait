@@ -68,6 +68,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "ShootAlternate",
+                    "type": "Button",
+                    "id": "a24b9d06-f41e-4b48-8fcb-e7672f1a4522",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -97,17 +106,6 @@
                     "name": "",
                     "id": "2dddeb59-974d-4345-ae44-851379fbf873",
                     "path": "<Keyboard>/r",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Debug_MoveAllEnemies",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "26914c78-1dc0-4419-aee7-ae49f9876788",
-                    "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -178,6 +176,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "LevelEditor_ToggleWallOnTile",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "26914c78-1dc0-4419-aee7-ae49f9876788",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ShootAlternate",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
