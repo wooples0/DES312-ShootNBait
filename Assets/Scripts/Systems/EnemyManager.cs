@@ -74,6 +74,11 @@ public class EnemyManager : MonoBehaviour
             GameManager.Instance.ChangeState(GameState.PlayerPhase);
             yield return null;
         }
+        if (SettingsManager.Instance.mode == GameMode.Limited)
+        {
+            GameObject.Find("Highlight_Cross(Clone)").GetComponent<SpriteRenderer>().enabled = true;
+        }
+        enemySpawnQueue.Clear();
         
     }
 
@@ -141,11 +146,21 @@ public class EnemyManager : MonoBehaviour
             if(enemy.currentTile == targetTile) { enemiesToKill.Add(enemy); }
         }
 
+        if(enemiesToKill.Count < GetTotalEnemies() && SettingsManager.Instance.mode == GameMode.Limited)
+        {
+            Debug.Log($"Not all enemies on tile. [Enemies on tile: {targetTile.GetEnemiesOnTile().Count}, Total enemies: {GetTotalEnemies()}]");
+            AudioManager.Instance.PlaySound("wrong");
+            Tile.hoveredTile = Tile.lastHoveredTile;
+            GameManager.Instance.ChangeState(GameState.PlayerPhase);
+            return;
+        }
+
         for(int i = 0; i < enemiesToKill.Count; i++)
         {
+            AudioManager.Instance.PlaySound("gunshot");
             enemiesToKill[i].OnDeath();
         }
-        //if(spawnedEnemies.Count > 0) { StartCoroutine(MoveAllEnemiesAwayFromTargetTile()); }
+        if(spawnedEnemies.Count > 0) { GameManager.Instance.ChangeState(GameState.PlayerPhase); return; }
         GameManager.Instance.ChangeState(GameState.EndPhase);
     }
 
@@ -316,6 +331,19 @@ public class EnemyManager : MonoBehaviour
         yield return null;
     }
 
+    public void ResetEnemyList()
+    {
+        foreach (var enemy in spawnedEnemies)
+        {
+            if (enemy.gameObject != null)
+            {
+                Destroy(enemy.gameObject);
+            }
+        }
+
+        spawnedEnemies.Clear();
+        enemySpawnQueue.Clear();
+    }
     public static int GetTotalEnemiesAlive()
     {
         return EnemyManager.Instance.spawnedEnemies.Count;

@@ -34,7 +34,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Debug_MoveAllEnemies",
+                    "name": "ResetLevel",
                     "type": "Button",
                     "id": "fb84e4b9-d653-449a-9636-33d44f2c0d44",
                     "expectedControlType": "",
@@ -109,7 +109,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Debug_MoveAllEnemies",
+                    "action": "ResetLevel",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

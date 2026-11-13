@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.UIElements;
+using System.Collections;
+using UnityEngine.InputSystem;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
@@ -42,29 +44,33 @@ public class GameManager : MonoBehaviour
         switch (newState)
         {
             case GameState.InitialiseLevel:
-                GridManager.Instance.InitialiseValues();
+                InitialiseLevel();
                 StartCoroutine(GridManager.Instance.GenerateGridFromLevel(loadedLevels[levelIndex]));
                 break;
+
             case GameState.SpawnEnemies:
                 ScoreManager.Instance.ResetAllValues();
                 GunManager.Instance.lastBaitUsed = Axis.None;
                 StartCoroutine(EnemyManager.Instance.SpawnNextWave());
                 break;
+
             case GameState.PlayerPhase:
+                
+                GridManager.Instance.UpdateTileHighlights();
                 break;
             
             case GameState.MovePhase:
                 break;
 
             case GameState.ShootPhase:
-                if(SettingsManager.Instance.mode == GameMode.Limited) { Tile.hoveredTile = Tile.goalTile; }
+                
+                if(SettingsManager.Instance.mode == GameMode.Limited) { Tile.lastHoveredTile = Tile.hoveredTile; Tile.hoveredTile = Tile.goalTile; }
                 if (Tile.hoveredTile != null) { EnemyManager.Instance.KillEnemiesOnTile(Tile.hoveredTile); }
                 break;
             
             case GameState.EndPhase:
                 if(levelIndex < loadedLevels.Count - 1) { levelIndex++; }
                 else { levelIndex = 0; }
-                SceneManager.LoadScene(0);
                 ChangeState(EnemyManager.Instance.spawnedEnemies.Count == 0 ? GameState.InitialiseLevel : GameState.PlayerPhase);
                 break;
             
@@ -72,7 +78,24 @@ public class GameManager : MonoBehaviour
                 throw new ArgumentOutOfRangeException(nameof(newState), newState, null);
         }
     }
-    public void ReloadLevel()
+
+    public void OnReloadLevel(InputAction.CallbackContext ctx)
+    {
+        if (GameState != GameState.PlayerPhase) { return; }
+        if (!ctx.started) {  return; }
+        InitialiseLevel();
+    }
+
+    public void InitialiseLevel()
+    {
+        EnemyManager.Instance.ResetEnemyList();
+        GridManager.Instance.ResetGrid();
+        GunManager.Instance.lastBaitUsed = Axis.None;
+        ScoreManager.Instance.ResetAllValues();
+        if(GameState != GameState.InitialiseLevel) { ChangeState(GameState.InitialiseLevel); }
+        
+    }
+    public void ReloadSceneAndLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }

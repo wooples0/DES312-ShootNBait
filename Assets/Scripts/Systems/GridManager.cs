@@ -27,19 +27,24 @@ public class GridManager : MonoBehaviour
     }
     private void Update()
     {
+        if (GameManager.Instance.GameState == GameState.InitialiseLevel || GameManager.Instance.GameState == GameState.SpawnEnemies)
+        {
+            return;
+        }
         ClearAllTileHighlights();
         UpdateTileHighlights();
+
     }
     
-    private void UpdateTileHighlights()
+    public void UpdateTileHighlights()
     {
         if (GameManager.Instance.GameState != GameState.PlayerPhase) { return; }
         
         var targetTile = Tile.hoveredTile;
-        GunManager.Instance.targetedTiles.Clear();
         
-        if(targetTile == null) { return; }
+        if(targetTile == null) { Tile.hoveredTile = null; return; }
 
+        GunManager.Instance.targetedTiles.Clear();
         highlightedTiles.Add(targetTile);
 
         if (GunManager.Instance.isGunEquipped)
@@ -100,16 +105,20 @@ public class GridManager : MonoBehaviour
 
     public IEnumerator GenerateGridFromLevel(ScriptableLevel level)
     {
-        DestroyGrid();
+
+        ResetGrid();
+        Debug.Log(tiles.Count);
         width = level.width;
         height = level.height;
-
+        var spawnDelay = level.width / 2 * 0.05f;
         //Debug.Log($"Level {level.name}");
         //Debug.Log($"Width {level.width}");
         //Debug.Log($"Height {level.height}");
         //Debug.Log($"List has {level.tileDataList.Count} tiles");
 
         CenterCameraOnGrid();
+
+        
 
         foreach(Tile_Data data in level.tileDataList)
         {
@@ -119,7 +128,7 @@ public class GridManager : MonoBehaviour
 
             var spawnedTile = Instantiate(data.type == TileType.Ground ? groundTile : wallTile, spawnPos, Quaternion.identity);
             
-            if(data.noOfEnemiesOnTile > 0) { EnemyManager.AddEnemyToSpawnQueue(spawnedTile); }
+            if (data.noOfEnemiesOnTile > 0) { EnemyManager.AddEnemyToSpawnQueue(spawnedTile); }
 
             string tilePrefix = data.type == TileType.Ground ? "[G]" : "[W]";
             spawnedTile.name = $"{tilePrefix} Tile ({spawnPos.x}, {spawnPos.y})";
@@ -128,11 +137,13 @@ public class GridManager : MonoBehaviour
             {
                 Tile.goalTile = spawnedTile;
                 var marker = Instantiate(circleMarker, spawnPos, Quaternion.identity);
-                marker.SetActive(true);
                 marker.transform.position += new Vector3(0, 0, -5);
             }
             tiles[new Vector2((int)spawnPos.x, (int)spawnPos.y)] = spawnedTile;
-            yield return new WaitForSeconds(0.00025f);
+
+            
+
+            yield return new WaitForSeconds(0.5f / (level.width * level.width));
         }
 
         GameManager.Instance.ChangeState(GameState.SpawnEnemies);
@@ -145,8 +156,10 @@ public class GridManager : MonoBehaviour
     //}
     public void CenterCameraOnGrid()
     {
-        cam.transform.position = new Vector3((float)width / 2 - 0.5f, (float)height / 2 - 0.5f, -10);
-        cam.GetComponent<Camera>().orthographicSize = ((width + height) / 4.0f);
+        //cam.transform.position = new Vector3((float)width / 2 - 0.5f, (float)height / 2 - 0.5f, -10);
+        //cam.GetComponent<Camera>().orthographicSize = ((width + height) / 4.0f);
+        cam.transform.position = new Vector3((float)width / 2 - 0.5f, (float)height / 2 - 0.5f + (height/10f), -10);
+        cam.GetComponent<Camera>().orthographicSize = ((width + height) / 3.0f);
     }
 
     public Tile GetTileAtPosition(Vector2 pos)
@@ -192,6 +205,7 @@ public class GridManager : MonoBehaviour
 
     public List<Tile> GetTilesInAxis(Axis axis, Tile tile)
     {
+        if(tile == null) { return null; }
         List<Tile> tilesToReturn = new List<Tile>();
         var startPos = tile.GetPosition();
         if(!tiles.TryGetValue(startPos, out var tileAtStartPos))
@@ -299,11 +313,11 @@ public class GridManager : MonoBehaviour
             var offsetX = startTilePosition.x > endTilePosition.x ? -1 : 1;
             var offsetY = startTilePosition.y > endTilePosition.y ? -1 : 1;
 
-            Debug.Log($"Start tile is {startTile.name}");
-            Debug.Log($"Attempting tile at {startTilePosition.x + offsetX}, {startTilePosition.y + offsetY}");
+            //Debug.Log($"Start tile is {startTile.name}");
+            //Debug.Log($"Attempting tile at {startTilePosition.x + offsetX}, {startTilePosition.y + offsetY}");
             var currentStepTile = GetTileAtPosition(new Vector2(startTilePosition.x + offsetX, startTilePosition.y + offsetY));
 
-            Debug.Log($"Step tile name" + currentStepTile.name);
+            //Debug.Log($"Step tile name" + currentStepTile.name);
             while(currentStepTile != endTile)
             {
                 tilesBetween.Add(currentStepTile);
@@ -330,6 +344,7 @@ public class GridManager : MonoBehaviour
     {
         foreach(var tile in highlightedTiles)
         {
+            if(tile == null) continue;
             if(tile.TryGetComponent<GroundTile>(out var ground))
             {
                 ground.ClearAllHighlightsOnTile();
@@ -361,27 +376,29 @@ public class GridManager : MonoBehaviour
 
     public void InitialiseValues()
     {
-        Tile.hoveredTile = null;
-        Tile.goalTile = null;
-        Destroy(GameObject.Find("Highlight_Cross(Clone)"));
+        
         width = PlayerPrefs.GetInt("width");
         height = PlayerPrefs.GetInt("height");
     }
 
-    public void DestroyGrid()
+    public void ResetGrid()
     {
+        if (GameObject.Find("Highlight_Cross(Clone)")){ Destroy(GameObject.Find("Highlight_Cross(Clone)")); }
         Tile.hoveredTile = null;
+        Tile.lastHoveredTile = null;
         Tile.goalTile = null;
+        highlightedTiles.Clear();   
 
-        if (tiles.Count > 0)
+        foreach (var tile in tiles)
         {
-            foreach(KeyValuePair<Vector2, Tile> Tile in tiles)
+            if (tile.Value != null)
             {
-                Destroy(Tile.Value.gameObject);
+                Destroy(tile.Value.gameObject);
             }
-            tiles.Clear();
         }
-        highlightedTiles.Clear();
+
+        tiles.Clear();
+        
     }
 
     public int GetMaxGridSize()

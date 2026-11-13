@@ -3,11 +3,14 @@ using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using TMPro;
+using System.Collections;
+using NUnit.Framework.Constraints;
 
 public abstract class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public static Tile hoveredTile;
     public static Tile goalTile;
+    public static Tile lastHoveredTile;
 
     [SerializeField] protected SpriteRenderer renderer;
     [SerializeField] private GameObject h_Crosshair, h_Selected, h_Nope, h_Arrows;
@@ -20,6 +23,8 @@ public abstract class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     void Awake()
     {
+        ClearAllHighlightsOnTile();
+        
     }
 
     public virtual void Init(int x, int y)
@@ -30,6 +35,7 @@ public abstract class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     private void Update()
     {
+        if (this == null) { return; }
         if (Tile.goalTile == this) 
         {
             SetHighlight(HighlightType.Crosshair, true);
@@ -53,6 +59,7 @@ public abstract class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public Vector2 GetPosition()
     {
+        if (this == null) { return Vector2.zero; }
         return new Vector2((int)transform.position.x, (int)transform.position.y);
     }
 
@@ -73,6 +80,11 @@ public abstract class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             enemiesOnTile.Add(enemy);
             UpdateEnemyCountLabel();
         }
+    }
+
+    public void PlaySpawnSound()
+    {
+        AudioManager.Instance.PlaySound("click1");
     }
 
     public void RemoveEnemyFromTile(BaseEnemy enemy)
@@ -114,7 +126,7 @@ public abstract class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         switch (h_Type)
         {
             case HighlightType.Crosshair://If gun is hovering this tile
-                h_Crosshair.SetActive(value);
+                h_Crosshair.GetComponent<SpriteRenderer>().enabled = value;
                 break;
 
             case HighlightType.Selected://If this tile is in range of bait but not target tile
@@ -142,6 +154,7 @@ public abstract class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                             h_Arrows.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 45));
                             break;
                         case Axis.DiagonalR:
+
                             h_Arrows.transform.rotation = Quaternion.Euler(new Vector3(0, 0, -45));
                             break;
                     }
@@ -160,12 +173,13 @@ public abstract class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void ClearAllHighlightsOnTile()
     {
-        if (h_Crosshair != null) h_Crosshair.SetActive(false);
+        if (h_Crosshair != null) h_Crosshair.GetComponent<SpriteRenderer>().enabled = false;
         if (h_Selected != null) h_Selected.SetActive(false);
         if (h_Arrows != null) h_Arrows.SetActive(false);
         if (h_Nope != null) h_Nope.SetActive(false);
     }
 }
+
 
 [System.Serializable]
 public enum HighlightType

@@ -78,15 +78,18 @@ public class GunManager : MonoBehaviour
     {
         if (GameManager.Instance.GameState != GameState.PlayerPhase) { return; }
         if (!ctx.started) { return; }
-        if (Tile.hoveredTile == null || !HoveringShootableTile()) {  return; }
+        if(Tile.hoveredTile == null) { Debug.Log("Hovered tile is null"); return; }
+        if(!HoveringShootableTile()) { Debug.Log($"{Tile.hoveredTile.name} is not a shootable tile"); AudioManager.Instance.PlaySound("wrong"); return; }
        
         if (isGunEquipped)
         {
             if(Tile.hoveredTile.GetEnemiesOnTile().Count == 0)
             {
+                AudioManager.Instance.PlaySound("wrong");
                 return;
             }
 
+            
             ScoreManager.Instance.IncrementBulletsUsed(1);
             GameManager.Instance.ChangeState(GameState.ShootPhase);
             
@@ -95,6 +98,8 @@ public class GunManager : MonoBehaviour
         {
             if(Tile.hoveredTile.GetEnemiesOnTile().Count > 0 || equippedBait == lastBaitUsed)
             {
+                Debug.Log("Enemies on tile or you are trying to use your last used bait");
+                AudioManager.Instance.PlaySound("wrong");
                 return;
             }
 
@@ -106,7 +111,7 @@ public class GunManager : MonoBehaviour
                     enemyCount += tile.GetEnemiesOnTile().Count;
                 }
             }
-            if (enemyCount == 0) { return; }
+            if (enemyCount == 0) { AudioManager.Instance.PlaySound("wrong"); return; }
             OnBait();
         }
     }
@@ -115,12 +120,14 @@ public class GunManager : MonoBehaviour
     {
         if(SettingsManager.Instance.mode == GameMode.Default) { return; }
         if (!ctx.started) { return; }
+        if (GameManager.Instance.GameState == GameState.ShootPhase) { return; }
         ScoreManager.Instance.IncrementBulletsUsed(1);
         GameManager.Instance.ChangeState(GameState.ShootPhase);
     }
 
     public void OnBait()
     {
+        AudioManager.Instance.PlaySound("swoosh");
         ScoreManager.Instance.IncrementBaitUsed(1);
         GameManager.Instance.ChangeState(GameState.MovePhase);
         lastBaitUsed = equippedBait;

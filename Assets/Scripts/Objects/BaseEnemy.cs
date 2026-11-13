@@ -12,18 +12,15 @@ public class BaseEnemy : MonoBehaviour
 
     public EnemyState enemyState;
 
-    [SerializeField] private float walkSpeed;
+    private float walkSpeed;
+    [SerializeField] private float speedModifier;
+    [SerializeField] private float minimumSpeed;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         enemyState = EnemyState.Idle;   
         transform.position = currentTile.GetPosition();
-    }
-
-    private void Update()
-    {
-        Debug.Log($"CurrentTile is {currentTile}");
     }
 
     public void ChangeState(EnemyState state)
@@ -39,6 +36,7 @@ public class BaseEnemy : MonoBehaviour
                 StartCoroutine(MoveThroughQueuedTiles());
                 break;
             case EnemyState.Finished:
+                AudioManager.Instance.PlayRandom(new string[] { "pop1", "pop2", "pop3" });
                 ChangeState(EnemyState.Idle);
                 break;
         }
@@ -65,7 +63,7 @@ public class BaseEnemy : MonoBehaviour
     public void SetTargetTile(Tile tile)
     {
         if(enemyState != EnemyState.Idle) { return; }
-        if (tile == currentTile) { Debug.Log($"{name} trying to move to {tile.name}, already at {tile.name}"); ChangeState(EnemyState.Finished); return; }
+        if (tile == currentTile) { /*Debug.Log($"{name} trying to move to {tile.name}, already at {tile.name}")*/; ChangeState(EnemyState.Finished); return; }
         targetTile = tile; ChangeState(EnemyState.Moving);
     }
 
@@ -102,6 +100,7 @@ public class BaseEnemy : MonoBehaviour
         //    ChangeState(EnemyState.Finished);
         //    yield break;
         //}
+        
         var initialQueueCount = tileMoveQueue.Count;
         for (int i = 0; i < initialQueueCount; i++)
         {
@@ -115,7 +114,7 @@ public class BaseEnemy : MonoBehaviour
                 //Debug.Log($"Found wall tile at index [{i}], removing index [{i}] and tiles after.");
                 for(int j = 0; j < initialQueueCount - i; j++)
                 {
-                    Debug.Log($"~Removing {tileMoveQueue[i].name} from queue");
+                    //Debug.Log($"~Removing {tileMoveQueue[i].name} from queue");
                     tileMoveQueue.RemoveAt(i);
                 }
                 break;
@@ -127,18 +126,21 @@ public class BaseEnemy : MonoBehaviour
         if (tileMoveQueue.Count == 0)
         {
             tileMoveQueue.Clear();
+            
             ChangeState(EnemyState.Finished);
             yield break;
         }
 
-        
-        for(int i = 0; i < tileMoveQueue.Count; i++)
+        walkSpeed = Mathf.Max(Vector3.Distance(transform.position, tileMoveQueue[tileMoveQueue.Count - 1].GetPosition()) * speedModifier, minimumSpeed);
+        Debug.Log(walkSpeed);
+
+        for (int i = 0; i < tileMoveQueue.Count; i++)
         {
             var currentTargetTile = tileMoveQueue[i];
 
-            while(Vector3.Distance(transform.position, currentTargetTile.GetPosition()) > 0.1f)
+            while(Vector3.Distance(transform.position, currentTargetTile.GetPosition()) > 0.05f)
             {
-                transform.position = Vector3.Lerp(transform.position, currentTargetTile.GetPosition(), walkSpeed * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, currentTargetTile.GetPosition(), walkSpeed * Time.deltaTime);
                 yield return null;
             }
             SetCurrentTile(currentTargetTile);

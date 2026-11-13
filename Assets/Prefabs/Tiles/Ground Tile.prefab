@@ -81,7 +81,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: dbc8cb89043fdce43acd408311d9da10, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cd3d1193be3bf5a46b2c9586db2354ca, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -142,7 +142,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3180290438815567821, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5
+      value: -1.73
+      objectReference: {fileID: 0}
+    - target: {fileID: 3454164792166399550, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3632141177756334752, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
       propertyPath: m_Name
@@ -215,7 +219,7 @@ PrefabInstance:
     - target: {fileID: 6643954017547651307, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 7f7ea2c2fbbd1a648a524ace33625d06, type: 3}
+      objectReference: {fileID: 21300000, guid: 2dc7a115d5f2ff942a0a9c86c2cda3c2, type: 3}
     - target: {fileID: 6643954017547651307, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
       propertyPath: m_Color.a
       value: 0.78431374
@@ -238,7 +242,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7987784668837081430, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:

@@ -3,7 +3,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
+#if UNITY_EDITOR
 public class LevelEditor_UIManager : MonoBehaviour
 {
     public static LevelEditor_UIManager Instance;
@@ -117,3 +117,4 @@ public class LevelEditor_UIManager : MonoBehaviour
         
     }
 }
+#endif

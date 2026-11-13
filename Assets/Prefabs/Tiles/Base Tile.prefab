@@ -218,7 +218,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 68d3a1ee75d083d42aac46bf3f9b4078, type: 3}
+  m_Sprite: {fileID: 21300000, guid: f8b008960c8b1f741b5637d9322bc626, type: 3}
   m_Color: {r: 1, g: 0.075673416, b: 0, a: 0.43137255}
   m_FlipX: 0
   m_FlipY: 0
@@ -316,7 +316,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6d2009865a5c5974d8580418e4721d99, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -451,8 +451,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 0.8144702, b: 0, a: 0.43137255}
+  m_Sprite: {fileID: 21300000, guid: 6d2009865a5c5974d8580418e4721d99, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.2627451}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -751,9 +751,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5231658608931717372, guid: 37b39d3d3a3a2ef44b5b4c8850763c0e, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2dc7a115d5f2ff942a0a9c86c2cda3c2, type: 3}
     - target: {fileID: 8823900662687349057, guid: 37b39d3d3a3a2ef44b5b4c8850763c0e, type: 3}
       propertyPath: m_Name
       value: Highlight_Cross
+      objectReference: {fileID: 0}
+    - target: {fileID: 8823900662687349057, guid: 37b39d3d3a3a2ef44b5b4c8850763c0e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
