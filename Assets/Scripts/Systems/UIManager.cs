@@ -7,8 +7,8 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
     [Header("Debug")]
-    [SerializeField] private bool debugEnabled;
-    public bool Debug => debugEnabled;
+
+    private bool debugInitialised;
     public TMP_Text equippedGunText;
     public TMP_Text equippedBaitText;
     public TMP_Text targetTileText;
@@ -26,7 +26,7 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        gridSizeDropdown.value = PlayerPrefs.GetInt("width") - 2;
+        EnableAllDebugUI(SettingsManager.Instance.debugEnabled);
     }
     // Update is called once per frame
     void Update()
@@ -112,6 +112,16 @@ public class UIManager : MonoBehaviour
 
         bulletsUsedText.text = ScoreManager.Instance.bulletsUsed.ToString();
         baitUsedText.text = ScoreManager.Instance.baitUsed.ToString();
+    }
+
+    public void EnableAllDebugUI(bool val)
+    {
+        var objList = GameObject.Find("DebugCanvas").GetComponentsInChildren<Transform>();
+
+        foreach (var obj in objList)
+        {
+            obj.gameObject.SetActive(val);
+        }
     }
 
     public void OnGridSizeDropdownChanged()

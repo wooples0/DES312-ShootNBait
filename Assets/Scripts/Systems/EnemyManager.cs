@@ -18,6 +18,7 @@ public class EnemyManager : MonoBehaviour
     public static List<Tile> enemySpawnQueue = new List<Tile>();
 
     private int noOfEnemiesToSpawn = 0;
+    private int totalEnemiesInWave = 0;
 
     
 
@@ -58,6 +59,7 @@ public class EnemyManager : MonoBehaviour
                 SpawnEnemy(GridManager.Instance.GetRandomTile());
                 yield return new WaitForSeconds(0.005f);
             }
+            totalEnemiesInWave = spawnedEnemies.Count;
             GameManager.Instance.ChangeState(GameState.PlayerPhase);
             yield return null;
         }
@@ -68,6 +70,7 @@ public class EnemyManager : MonoBehaviour
                 SpawnEnemy(enemySpawnQueue[i]);
                 yield return new WaitForSeconds(0.005f);
             }
+            totalEnemiesInWave = spawnedEnemies.Count;
             GameManager.Instance.ChangeState(GameState.PlayerPhase);
             yield return null;
         }
@@ -311,6 +314,16 @@ public class EnemyManager : MonoBehaviour
 
         }
         yield return null;
+    }
+
+    public static int GetTotalEnemiesAlive()
+    {
+        return EnemyManager.Instance.spawnedEnemies.Count;
+    }
+
+    public static int GetTotalEnemies()
+    {
+        return EnemyManager.Instance.totalEnemiesInWave;
     }
 
     
