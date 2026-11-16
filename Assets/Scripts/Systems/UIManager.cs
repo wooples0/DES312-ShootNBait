@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance;
 
     [Header("Debug UI")]
+    [SerializeField] private Canvas debugCanvas;
     private bool debugInitialised;
     public TMP_Text equippedGunText;
     public TMP_Text equippedBaitText;
@@ -131,7 +132,7 @@ public class UIManager : MonoBehaviour
 
     public void EnableAllDebugUI(bool val)
     {
-        var objList = GameObject.Find("DebugCanvas").GetComponentsInChildren<Transform>();
+        var objList = debugCanvas.GetComponentsInChildren<Transform>(true);
 
         foreach (var obj in objList)
         {
