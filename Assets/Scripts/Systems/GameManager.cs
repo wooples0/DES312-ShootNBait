@@ -7,6 +7,7 @@ using System.Linq;
 using UnityEngine.UIElements;
 using System.Collections;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
@@ -14,7 +15,7 @@ public class GameManager : MonoBehaviour
     public GameState GameState;
 
     [SerializeField] private List<ScriptableLevel> loadedLevels;
-    [SerializeField] private static int levelIndex;
+    [SerializeField] private int levelIndex = 0;
     [SerializeField] private bool resetLevelsOnLoad;
     [SerializeField] private ScriptableLevel levelToLoad;
     public ScriptableLevel level => levelToLoad;
@@ -31,11 +32,6 @@ public class GameManager : MonoBehaviour
         Debug.Log($"Loading levelIndex {levelIndex}");
         levels = Resources.LoadAll<ScriptableLevel>("Levels").ToList();
         ChangeState(GameState.InitialiseLevel);
-    }
-
-    void Update()
-    {
-        
     }
 
     public void ChangeState(GameState newState)
@@ -64,6 +60,7 @@ public class GameManager : MonoBehaviour
             case GameState.ShootPhase:
                 
                 if(SettingsManager.Instance.mode == GameMode.Limited) { Tile.lastHoveredTile = Tile.hoveredTile; Tile.hoveredTile = Tile.goalTile; }
+                UIManager.Instance.ResetBaitUI();
                 if (Tile.hoveredTile != null) { EnemyManager.Instance.KillEnemiesOnTile(Tile.hoveredTile); }
                 break;
             
@@ -92,8 +89,7 @@ public class GameManager : MonoBehaviour
         GunManager.Instance.lastBaitUsed = Axis.None;
         AudioManager.Instance.StopSound("bgm");
         ScoreManager.Instance.ResetAllValues();
-        UIManager.Instance.UpdateBaitUI(GunManager.Instance.equippedBait, GunManager.Instance.lastBaitUsed);
-        UIManager.Instance.UpdateLevelTitle(loadedLevels[levelIndex].name.ToString());
+        UIManager.Instance.UpdateLevelTitle(loadedLevels[levelIndex].levelName);
         if(GameState != GameState.InitialiseLevel) { ChangeState(GameState.InitialiseLevel); }
         
     }

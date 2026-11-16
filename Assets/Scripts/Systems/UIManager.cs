@@ -43,6 +43,7 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         EnableAllDebugUI(SettingsManager.Instance.debugEnabled);
+        ResetBaitUI();
     }
     // Update is called once per frame
     void Update()
@@ -148,11 +149,12 @@ public class UIManager : MonoBehaviour
         if (lastUsedAxis != Axis.None)
         {
             GetCorrespondingBaitUIObject(lastUsedAxis).color = cooldownColour1;
-            GetCorrespondingBaitUIObject(lastUsedAxis).transform.Find("cooldownIcon").gameObject.SetActive(true);
+            
             if (selectedAxis == lastUsedAxis)
             {
+                GetCorrespondingBaitUIObject(lastUsedAxis).transform.Find("cooldownIcon").gameObject.SetActive(true);
                 GetCorrespondingBaitUIObject(lastUsedAxis).transform.Find("activeIcon").GetComponent<Image>().color = cooldownColour2;
-                GetCorrespondingBaitUIObject(lastUsedAxis).transform.Find("activeIcon").gameObject.SetActive(true);
+                //GetCorrespondingBaitUIObject(lastUsedAxis).transform.Find("activeIcon").gameObject.SetActive(true);
                 return;
             }
 
@@ -190,7 +192,7 @@ public class UIManager : MonoBehaviour
     {
         levelTitle.text = newTitle;
     }
-    private void ResetBaitUI()
+    public void ResetBaitUI()
     {
         //GetCorrespondingBaitUIObject(Axis.Horizontal).color = baseColour;
         //GetCorrespondingBaitUIObject(Axis.Horizontal).transform.Find("cooldownIcon").gameObject.SetActive(false);
