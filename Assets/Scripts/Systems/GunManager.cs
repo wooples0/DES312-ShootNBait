@@ -30,7 +30,9 @@ public class GunManager : MonoBehaviour
         else { isGunEquipped = false; }
         equippedBait = Axis.Horizontal;
         lastBaitUsed = Axis.None;
+        
     }
+
     public void OnEquipGun(InputAction.CallbackContext ctx)
     {
         if (SettingsManager.Instance.mode == GameMode.Limited) { return; }
@@ -70,6 +72,8 @@ public class GunManager : MonoBehaviour
 
                 break;
         }
+        AudioManager.Instance.PlayRandom(new string[] { "swap1", "swap2", "swap3" });
+        UIManager.Instance.UpdateBaitUI(equippedBait, lastBaitUsed);
 
 
     }
@@ -118,19 +122,22 @@ public class GunManager : MonoBehaviour
 
     public void OnShootAlternate(InputAction.CallbackContext ctx)
     {
+
         if(SettingsManager.Instance.mode == GameMode.Default) { return; }
         if (!ctx.started) { return; }
         if (GameManager.Instance.GameState == GameState.ShootPhase) { return; }
+
         ScoreManager.Instance.IncrementBulletsUsed(1);
         GameManager.Instance.ChangeState(GameState.ShootPhase);
     }
 
     public void OnBait()
     {
-        AudioManager.Instance.PlaySound("swoosh");
+        AudioManager.Instance.PlayRandom(new string[] { "Powerup172", "Powerup174", "Powerup177" });
         ScoreManager.Instance.IncrementBaitUsed(1);
         GameManager.Instance.ChangeState(GameState.MovePhase);
         lastBaitUsed = equippedBait;
+        UIManager.Instance.UpdateBaitUI(equippedBait, lastBaitUsed);
         StartCoroutine(EnemyManager.Instance.SetEnemiesOnTiles(Tile.hoveredTile, targetedTiles));
     }
 

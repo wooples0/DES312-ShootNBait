@@ -71,6 +71,9 @@ public class EnemyManager : MonoBehaviour
                 yield return new WaitForSeconds(0.005f);
             }
             totalEnemiesInWave = spawnedEnemies.Count;
+            AudioManager.Instance.PlaySound("spawn");
+            yield return new WaitForSeconds(0.5f);
+            AudioManager.Instance.PlaySound("bgm");
             GameManager.Instance.ChangeState(GameState.PlayerPhase);
             yield return null;
         }
@@ -133,7 +136,27 @@ public class EnemyManager : MonoBehaviour
             }
             yield return null;
         }
-        //Debug.Log("All enemies finished moving");
+        //Disable renderers of enemies who are behindthe first one in the list
+
+        foreach(BaseEnemy enemy in targetTile.GetEnemiesOnTile())
+        {
+            if (enemy != targetTile.GetEnemiesOnTile()[targetTile.GetEnemiesOnTile().Count - 1])
+            {
+                var renderers = enemy.gameObject.GetComponentsInChildren<MeshRenderer>();
+                foreach(var renderer in renderers)
+                {
+                    renderer.enabled = false;
+                }
+            }
+            else
+            {
+                var renderers = enemy.gameObject.GetComponentsInChildren<MeshRenderer>();
+                foreach (var renderer in renderers)
+                {
+                    renderer.enabled = true;
+                }
+            }
+        }
         GameManager.Instance.ChangeState(GameState.PlayerPhase);
         yield return null;
     }

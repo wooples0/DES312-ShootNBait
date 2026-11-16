@@ -77,6 +77,7 @@ public class GridManager : MonoBehaviour
             {
                 GunManager.Instance.targetedTiles.Add(tile);
                 tile.SetHighlight(HighlightType.Selected, true);
+                
             }
         }
     }
@@ -118,33 +119,64 @@ public class GridManager : MonoBehaviour
 
         CenterCameraOnGrid();
 
-        
+        List<Tile_Data> data = level.tileDataList;
 
-        foreach(Tile_Data data in level.tileDataList)
+        for(int x = 0; x < width; x++)
         {
+            var even = x % 2 == 0;
+            AudioManager.Instance.PlaySound(even ? "click1" : "click2");
 
-            var spawnPos = data.position;
-
-
-            var spawnedTile = Instantiate(data.type == TileType.Ground ? groundTile : wallTile, spawnPos, Quaternion.identity);
-            
-            if (data.noOfEnemiesOnTile > 0) { EnemyManager.AddEnemyToSpawnQueue(spawnedTile); }
-
-            string tilePrefix = data.type == TileType.Ground ? "[G]" : "[W]";
-            spawnedTile.name = $"{tilePrefix} Tile ({spawnPos.x}, {spawnPos.y})";
-            spawnedTile.Init((int)spawnPos.x, (int)spawnPos.y);
-            if (spawnPos == level.shootTilePosition && SettingsManager.Instance.mode == GameMode.Limited) 
+            for (int y = 0; y < height; y++)
             {
-                Tile.goalTile = spawnedTile;
-                var marker = Instantiate(circleMarker, spawnPos, Quaternion.identity);
-                marker.transform.position += new Vector3(0, 0, -5);
+                var spawnPos = new Vector2(x, y);
+                Tile_Data tileDataAtPosition = data.Find(tileData => tileData.position == spawnPos);
+                var tileToSpawn = tileDataAtPosition.type == TileType.Ground ? groundTile : wallTile;
+
+                var spawnedTile = Instantiate(tileToSpawn, spawnPos, Quaternion.identity);
+
+                if(tileDataAtPosition.noOfEnemiesOnTile > 0) { EnemyManager.AddEnemyToSpawnQueue(spawnedTile); }
+
+                string tilePrefix = tileDataAtPosition.type == TileType.Ground ? "[G]" : "[W]";
+                spawnedTile.name = $"{tilePrefix} Tile ({spawnPos.x}, {spawnPos.y})";
+                spawnedTile.Init((int)tileDataAtPosition.position.x, (int)tileDataAtPosition.position.y);
+
+                if (spawnPos == level.shootTilePosition && SettingsManager.Instance.mode == GameMode.Limited)
+                {
+                    Tile.goalTile = spawnedTile;
+                    var marker = Instantiate(circleMarker, spawnPos, Quaternion.identity);
+                    marker.transform.position += new Vector3(0, 0, -5);
+                }
+                tiles[new Vector2((int)tileDataAtPosition.position.x, (int)tileDataAtPosition.position.y)] = spawnedTile;
             }
-            tiles[new Vector2((int)spawnPos.x, (int)spawnPos.y)] = spawnedTile;
+            
+            yield return new WaitForSeconds(1f / Mathf.Pow(width, 0.9f));
+        }
+
+        //foreach(Tile_Data data in level.tileDataList)
+        //{
+
+        //    var spawnPos = data.position;
+
+
+        //    var spawnedTile = Instantiate(data.type == TileType.Ground ? groundTile : wallTile, spawnPos, Quaternion.identity);
+            
+        //    if (data.noOfEnemiesOnTile > 0) { EnemyManager.AddEnemyToSpawnQueue(spawnedTile); }
+
+        //    string tilePrefix = data.type == TileType.Ground ? "[G]" : "[W]";
+        //    spawnedTile.name = $"{tilePrefix} Tile ({spawnPos.x}, {spawnPos.y})";
+        //    spawnedTile.Init((int)spawnPos.x, (int)spawnPos.y);
+        //    if (spawnPos == level.shootTilePosition && SettingsManager.Instance.mode == GameMode.Limited) 
+        //    {
+        //        Tile.goalTile = spawnedTile;
+        //        var marker = Instantiate(circleMarker, spawnPos, Quaternion.identity);
+        //        marker.transform.position += new Vector3(0, 0, -5);
+        //    }
+        //    tiles[new Vector2((int)spawnPos.x, (int)spawnPos.y)] = spawnedTile;
 
             
 
-            yield return new WaitForSeconds(0.5f / (level.width * level.width));
-        }
+        //    yield return new WaitForSeconds(0.5f / (level.width * level.width));
+        //}
 
         GameManager.Instance.ChangeState(GameState.SpawnEnemies);
         yield return null;
@@ -158,7 +190,7 @@ public class GridManager : MonoBehaviour
     {
         //cam.transform.position = new Vector3((float)width / 2 - 0.5f, (float)height / 2 - 0.5f, -10);
         //cam.GetComponent<Camera>().orthographicSize = ((width + height) / 4.0f);
-        cam.transform.position = new Vector3((float)width / 2 - 0.5f, (float)height / 2 - 0.5f + (height/10f), -10);
+        cam.transform.position = new Vector3((float)width / 2 - 0.5f, (float)height / 2 - 0.39f + (height/10f), -10);
         cam.GetComponent<Camera>().orthographicSize = ((width + height) / 3.0f);
     }
 

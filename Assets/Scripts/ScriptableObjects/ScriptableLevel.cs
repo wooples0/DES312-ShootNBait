@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class ScriptableLevel : ScriptableObject
 {
     public int id;
+    public string levelName;
     public int width = 0;
     public int height = 0;
 

@@ -6,6 +6,9 @@ using System.Linq;
 
 public class BaseEnemy : MonoBehaviour
 {
+    [SerializeField] private Animator a;
+    [SerializeField] private Renderer outlineRenderer;
+
     public List<Tile> tileMoveQueue;
     public Tile currentTile;
     public Tile targetTile;
@@ -23,6 +26,10 @@ public class BaseEnemy : MonoBehaviour
         transform.position = currentTile.GetPosition();
     }
 
+    private void Update()
+    {
+    }
+
     public void ChangeState(EnemyState state)
     {
         enemyState = state;
@@ -36,6 +43,7 @@ public class BaseEnemy : MonoBehaviour
                 StartCoroutine(MoveThroughQueuedTiles());
                 break;
             case EnemyState.Finished:
+                a.SetTrigger("finished");
                 AudioManager.Instance.PlayRandom(new string[] { "pop1", "pop2", "pop3" });
                 ChangeState(EnemyState.Idle);
                 break;
@@ -67,6 +75,19 @@ public class BaseEnemy : MonoBehaviour
         targetTile = tile; ChangeState(EnemyState.Moving);
     }
 
+    public void SetOutline(bool outline)
+    {
+        
+        if (outlineRenderer == null) { Debug.Log("Outline not found"); }
+        if (outline)
+        {
+            outlineRenderer.material.color = Color.white;
+        }
+        else
+        {
+            outlineRenderer.material.color = Color.black;
+        }
+    }
     public void OnDeath()
     {
         currentTile.RemoveEnemyFromTile(this);
@@ -77,51 +98,25 @@ public class BaseEnemy : MonoBehaviour
         //StartCoroutine(OnDeathCoroutine());
     }
 
-    //public IEnumerator OnDeathCoroutine()
-    //{
-    //    Debug.Log($"Killed enemy {this.name}");
-    //    Destroy(this.gameObject);
-    //    yield return null;
-    //}
-
     private IEnumerator MoveThroughQueuedTiles()
     {
-        //Debug.Log($"===Tiles in queue before check: {tileMoveQueue.Count}");
-        //if (currentTile != null) { currentTile.RemoveEnemyFromTile(this); }
-
-        //if(tileMoveQueue.Count == 0 && targetTile != null && targetTile.Walkable)
-        //{
-        //    while (Vector3.Distance(transform.position, targetTile.GetPosition()) > 0.1f)
-        //    {
-        //        transform.position = Vector3.Lerp(transform.position, targetTile.GetPosition(), walkSpeed * Time.deltaTime);
-        //        yield return null;
-        //    }
-        //    SetCurrentTile(targetTile);
-        //    ChangeState(EnemyState.Finished);
-        //    yield break;
-        //}
-        
         var initialQueueCount = tileMoveQueue.Count;
         for (int i = 0; i < initialQueueCount; i++)
         {
             var tile = tileMoveQueue[i];
             if (tile.Walkable)
             {
-                
+                //leaving space for ifi want walkable tiles to have special effects
             }
             else
             {
-                //Debug.Log($"Found wall tile at index [{i}], removing index [{i}] and tiles after.");
                 for(int j = 0; j < initialQueueCount - i; j++)
                 {
-                    //Debug.Log($"~Removing {tileMoveQueue[i].name} from queue");
                     tileMoveQueue.RemoveAt(i);
                 }
                 break;
             }
         }
-
-        //Debug.Log($"{this.name} is moving [{tileMoveQueue.Count}] tiles.\n");
 
         if (tileMoveQueue.Count == 0)
         {
@@ -132,8 +127,9 @@ public class BaseEnemy : MonoBehaviour
         }
 
         walkSpeed = Mathf.Max(Vector3.Distance(transform.position, tileMoveQueue[tileMoveQueue.Count - 1].GetPosition()) * speedModifier, minimumSpeed);
-        Debug.Log(walkSpeed);
+        a.SetTrigger("moving");
 
+        yield return new WaitForSeconds(0.0125f);
         for (int i = 0; i < tileMoveQueue.Count; i++)
         {
             var currentTargetTile = tileMoveQueue[i];

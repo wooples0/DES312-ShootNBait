@@ -51,10 +51,10 @@ public abstract class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     }
     public virtual void OnPointerExit(PointerEventData eventData)
     {
-        //if(Tile.hoveredTile == this)
-        //{
-        //    Tile.hoveredTile = null;
-        //}
+        if(Tile.hoveredTile == this)
+        {
+            Tile.hoveredTile = null;
+        }
     }
 
     public Vector2 GetPosition()
@@ -158,6 +158,13 @@ public abstract class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                             h_Arrows.transform.rotation = Quaternion.Euler(new Vector3(0, 0, -45));
                             break;
                     }
+                    if(enemiesOnTile.Count > 0)
+                    {
+                        foreach(BaseEnemy enemy in enemiesOnTile)
+                        {
+                            enemy.SetOutline(true);
+                        }
+                    }
                 }    
                 break;
 
@@ -177,6 +184,14 @@ public abstract class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         if (h_Selected != null) h_Selected.SetActive(false);
         if (h_Arrows != null) h_Arrows.SetActive(false);
         if (h_Nope != null) h_Nope.SetActive(false);
+
+        if(enemiesOnTile.Count > 0)
+        {
+            foreach(BaseEnemy enemy in enemiesOnTile)
+            {
+                enemy.SetOutline(false);
+            }//I thinki shouldve figured out a way to not call this Every Frame
+        }
     }
 }
 

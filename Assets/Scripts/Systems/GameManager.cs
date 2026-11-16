@@ -44,18 +44,17 @@ public class GameManager : MonoBehaviour
         switch (newState)
         {
             case GameState.InitialiseLevel:
+                
                 InitialiseLevel();
                 StartCoroutine(GridManager.Instance.GenerateGridFromLevel(loadedLevels[levelIndex]));
                 break;
 
             case GameState.SpawnEnemies:
-                ScoreManager.Instance.ResetAllValues();
-                GunManager.Instance.lastBaitUsed = Axis.None;
                 StartCoroutine(EnemyManager.Instance.SpawnNextWave());
                 break;
 
             case GameState.PlayerPhase:
-                
+                UIManager.Instance.UpdateBaitUI(GunManager.Instance.equippedBait, GunManager.Instance.lastBaitUsed);
                 GridManager.Instance.UpdateTileHighlights();
                 break;
             
@@ -91,7 +90,10 @@ public class GameManager : MonoBehaviour
         EnemyManager.Instance.ResetEnemyList();
         GridManager.Instance.ResetGrid();
         GunManager.Instance.lastBaitUsed = Axis.None;
+        AudioManager.Instance.StopSound("bgm");
         ScoreManager.Instance.ResetAllValues();
+        UIManager.Instance.UpdateBaitUI(GunManager.Instance.equippedBait, GunManager.Instance.lastBaitUsed);
+        UIManager.Instance.UpdateLevelTitle(loadedLevels[levelIndex].name.ToString());
         if(GameState != GameState.InitialiseLevel) { ChangeState(GameState.InitialiseLevel); }
         
     }
