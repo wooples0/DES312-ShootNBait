@@ -8,8 +8,9 @@ public class SettingsManager : MonoBehaviour
     public bool debugEnabled;
     public bool showEnemyCountOnTiles;
 
-    [Header("GameMode")]
+    [Header("Game")]
     public GameMode mode = GameMode.Default;
+    public bool recordPlayerData;
 
     void Awake()
     {

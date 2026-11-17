@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.UI;
+using Abertay.Analytics;
 
 public class UIManager : MonoBehaviour
 {
@@ -34,6 +35,13 @@ public class UIManager : MonoBehaviour
 
     [Header("Level Information UI")]
     [SerializeField] private TMP_Text levelTitle;
+
+    [Header("User Input UI")]
+    [SerializeField] private Canvas userInputCanvas;
+    [SerializeField] private TMP_Text userInputTitle;
+    [SerializeField] private TMP_InputField userInputField;
+    public string userName => userInputField.text;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
@@ -43,6 +51,7 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         EnableAllDebugUI(SettingsManager.Instance.debugEnabled);
+        EnableUserInputScreen(SettingsManager.Instance.recordPlayerData);
         ResetBaitUI();
     }
     // Update is called once per frame
@@ -141,6 +150,24 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void EnableUserInputScreen(bool val)
+    {
+        if (userInputCanvas != null) { userInputCanvas.gameObject.SetActive(val); }
+    }
+
+    public void OnConfirmUserInput()
+    {
+        if(userName == null || userName == string.Empty || userName == " ") return;
+        AnalyticsManager.InitialiseWithCustomID(userName, SettingsManager.Instance.mode == GameMode.Default ? "Free Shoot": "Target Tile");
+        EnableUserInputScreen(false);
+        GameManager.Instance.ChangeState(GameState.InitialiseLevel);
+    }
+    public void OnSkipDataAnalytics()
+    {
+        EnableUserInputScreen(false);
+        SettingsManager.Instance.recordPlayerData = false;
+        GameManager.Instance.ChangeState(GameState.InitialiseLevel);
+    }
     public void UpdateBaitUI(Axis selectedAxis, Axis lastUsedAxis)
     {
         ResetBaitUI();

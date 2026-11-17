@@ -112,6 +112,7 @@ public class EnemyManager : MonoBehaviour
 
         if (enemiesToMove.Count == 0)
         {
+            HideStackedEnemiesOnTile(targetTile);
             GameManager.Instance.ChangeState(GameState.PlayerPhase);
             yield break;
         }
@@ -136,27 +137,8 @@ public class EnemyManager : MonoBehaviour
             }
             yield return null;
         }
-        //Disable renderers of enemies who are behindthe first one in the list
 
-        foreach(BaseEnemy enemy in targetTile.GetEnemiesOnTile())
-        {
-            if (enemy != targetTile.GetEnemiesOnTile()[targetTile.GetEnemiesOnTile().Count - 1])
-            {
-                var renderers = enemy.gameObject.GetComponentsInChildren<MeshRenderer>();
-                foreach(var renderer in renderers)
-                {
-                    renderer.enabled = false;
-                }
-            }
-            else
-            {
-                var renderers = enemy.gameObject.GetComponentsInChildren<MeshRenderer>();
-                foreach (var renderer in renderers)
-                {
-                    renderer.enabled = true;
-                }
-            }
-        }
+        HideStackedEnemiesOnTile(targetTile);
         GameManager.Instance.ChangeState(GameState.PlayerPhase);
         yield return null;
     }
@@ -185,6 +167,29 @@ public class EnemyManager : MonoBehaviour
         }
         if(spawnedEnemies.Count > 0) { GameManager.Instance.ChangeState(GameState.PlayerPhase); return; }
         GameManager.Instance.ChangeState(GameState.EndPhase);
+    }
+
+    public void HideStackedEnemiesOnTile(Tile targetTile)
+    {
+        foreach (BaseEnemy enemy in targetTile.GetEnemiesOnTile())
+        {
+            if (enemy != targetTile.GetEnemiesOnTile()[0])
+            {
+                var renderers = enemy.gameObject.GetComponentsInChildren<MeshRenderer>();
+                foreach (var renderer in renderers)
+                {
+                    renderer.enabled = false;
+                }
+            }
+            else
+            {
+                var renderers = enemy.gameObject.GetComponentsInChildren<MeshRenderer>();
+                foreach (var renderer in renderers)
+                {
+                    renderer.enabled = true;
+                }
+            }
+        }
     }
 
     public void OnDebug_SpawnEnemy(InputAction.CallbackContext ctx)

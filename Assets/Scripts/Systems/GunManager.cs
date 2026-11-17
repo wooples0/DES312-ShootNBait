@@ -56,19 +56,19 @@ public class GunManager : MonoBehaviour
         switch (equippedBait)
         {
             case Axis.Vertical:
-                equippedBait = ctx.ReadValue<float>() > 0 ? Axis.DiagonalR : Axis.DiagonalL;
+                equippedBait = -ctx.ReadValue<float>() > 0 ? Axis.DiagonalR : Axis.DiagonalL;
 
                 break;
             case Axis.Horizontal:
-                equippedBait = ctx.ReadValue<float>() > 0 ? Axis.DiagonalL : Axis.DiagonalR;
+                equippedBait = -ctx.ReadValue<float>() > 0 ? Axis.DiagonalL : Axis.DiagonalR;
 
                 break;
             case Axis.DiagonalR:
-                equippedBait = ctx.ReadValue<float>() > 0 ? Axis.Horizontal : Axis.Vertical;
+                equippedBait = -ctx.ReadValue<float>() > 0 ? Axis.Horizontal : Axis.Vertical;
 
                 break;
             case Axis.DiagonalL:
-                equippedBait = ctx.ReadValue<float>() > 0 ? Axis.Vertical : Axis.Horizontal;
+                equippedBait = -ctx.ReadValue<float>() > 0 ? Axis.Vertical : Axis.Horizontal;
 
                 break;
         }

@@ -77,6 +77,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "LevelEditor_ToggleTargetTile",
+                    "type": "Button",
+                    "id": "c0750c3a-8182-4ded-b2b6-0c8c3b4e79f9",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -187,6 +196,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "ShootAlternate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bcd1f843-a4eb-45f0-9519-f173df53a41e",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LevelEditor_ToggleTargetTile",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

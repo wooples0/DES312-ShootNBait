@@ -314,8 +314,8 @@ MonoBehaviour:
   countLabel: {fileID: 8712731184948797949}
   enemiesOnTile: []
   IsWalkable: 1
-  baseColour: {r: 0.63529414, g: 0.7019608, b: 0.76862746, a: 1}
-  offsetColour: {r: 0.35526672, g: 0.4009038, b: 0.44654083, a: 1}
+  baseColour: {r: 0.63458717, g: 0.7009414, b: 0.76729554, a: 1}
+  offsetColour: {r: 0.39012244, g: 0.43106124, b: 0.472, a: 1}
 --- !u!114 &8712731184948797949 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3640890213272104183, guid: 1902877d6dc76a94a93008a28d3b179e, type: 3}

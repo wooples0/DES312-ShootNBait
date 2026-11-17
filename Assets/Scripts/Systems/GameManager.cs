@@ -8,6 +8,9 @@ using UnityEngine.UIElements;
 using System.Collections;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
+using UnityEditor;
+using Abertay.Analytics;
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
@@ -21,6 +24,8 @@ public class GameManager : MonoBehaviour
     public ScriptableLevel level => levelToLoad;
     [SerializeField] private static List<ScriptableLevel> levels = new List<ScriptableLevel>();
 
+    private float gameTime;
+    private float levelTime;
 
     private void Awake()
     {
@@ -29,9 +34,19 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
+        
         Debug.Log($"Loading levelIndex {levelIndex}");
         levels = Resources.LoadAll<ScriptableLevel>("Levels").ToList();
-        ChangeState(GameState.InitialiseLevel);
+        ChangeState(GameState.UserInputPhase);
+    }
+
+    private void Update()
+    {
+        gameTime += Time.deltaTime;
+        if(GameState != GameState.EndPhase && GameState != GameState.SpawnEnemies && GameState != GameState.InitialiseLevel && GameState != GameState.UserInputPhase)
+        {
+            levelTime += Time.deltaTime;
+        }
     }
 
     public void ChangeState(GameState newState)
@@ -39,8 +54,10 @@ public class GameManager : MonoBehaviour
         GameState = newState;
         switch (newState)
         {
+            case GameState.UserInputPhase:
+                if (!SettingsManager.Instance.recordPlayerData) { ChangeState(GameState.InitialiseLevel); }
+                break;
             case GameState.InitialiseLevel:
-                
                 InitialiseLevel();
                 StartCoroutine(GridManager.Instance.GenerateGridFromLevel(loadedLevels[levelIndex]));
                 break;
@@ -65,9 +82,19 @@ public class GameManager : MonoBehaviour
                 break;
             
             case GameState.EndPhase:
-                if(levelIndex < loadedLevels.Count - 1) { levelIndex++; }
-                else { levelIndex = 0; }
-                ChangeState(EnemyManager.Instance.spawnedEnemies.Count == 0 ? GameState.InitialiseLevel : GameState.PlayerPhase);
+                
+                if(EnemyManager.Instance.spawnedEnemies.Count == 0)
+                {
+                    if (SettingsManager.Instance.recordPlayerData) { RecordLevelAnalytics(); }
+                    if (levelIndex < loadedLevels.Count - 1) { levelIndex++; }
+                    else { levelIndex = 0; }
+                    ChangeState(GameState.InitialiseLevel);
+                }
+                else
+                {
+                    ChangeState(GameState.PlayerPhase);
+                }
+                
                 break;
             
             default:
@@ -82,6 +109,25 @@ public class GameManager : MonoBehaviour
         InitialiseLevel();
     }
 
+    public void RecordLevelAnalytics()
+    {
+        Dictionary<string, object> data = new Dictionary<string, object>();
+
+        data.Add("elapsedTotalTime", gameTime);
+        data.Add("elapsedLevelTime", levelTime);
+        data.Add("totalMovesPerformed", ScoreManager.Instance.baitUsed);
+
+        Debug.Log($"" +
+            $"Recording data for [{loadedLevels[levelIndex]}" +
+            $"\n\t\t\telapsedLevelTime: {gameTime}" +
+            $"\n\t\t\telapsedLevelTime: {levelTime}" +
+            $"\n\t\t\ttotalMovesPerformed: {ScoreManager.Instance.baitUsed}"
+            );
+
+        AnalyticsManager.SendCustomEvent(loadedLevels[levelIndex].levelName, data);
+
+    }
+
     public void InitialiseLevel()
     {
         EnemyManager.Instance.ResetEnemyList();
@@ -90,6 +136,7 @@ public class GameManager : MonoBehaviour
         AudioManager.Instance.StopSound("bgm");
         ScoreManager.Instance.ResetAllValues();
         UIManager.Instance.UpdateLevelTitle(loadedLevels[levelIndex].levelName);
+        levelTime = 0;
         if(GameState != GameState.InitialiseLevel) { ChangeState(GameState.InitialiseLevel); }
         
     }
@@ -123,12 +170,13 @@ public class GameManager : MonoBehaviour
 
 public enum GameState
 {
-    InitialiseLevel = 0,
-    SpawnEnemies = 1,
-    PlayerPhase = 2,
-    MovePhase = 3,
-    ShootPhase = 4,
-    EndPhase = 5,
-    SaveDataPhase = 6,
-    LoadDataPhase = 7,
+    UserInputPhase = 0,
+    InitialiseLevel = 1,
+    SpawnEnemies = 2,
+    PlayerPhase = 3,
+    MovePhase = 4,
+    ShootPhase = 5,
+    EndPhase = 6,
+    SaveDataPhase = 7,
+    LoadDataPhase = 8,
 }

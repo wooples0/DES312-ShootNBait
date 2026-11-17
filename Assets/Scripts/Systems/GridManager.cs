@@ -108,7 +108,6 @@ public class GridManager : MonoBehaviour
     {
 
         ResetGrid();
-        Debug.Log(tiles.Count);
         width = level.width;
         height = level.height;
         var spawnDelay = level.width / 2 * 0.05f;
