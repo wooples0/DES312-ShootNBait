@@ -129,11 +129,13 @@ public class BaseEnemy : MonoBehaviour
         walkSpeed = Mathf.Max(Vector3.Distance(transform.position, tileMoveQueue[tileMoveQueue.Count - 1].GetPosition()) * speedModifier, minimumSpeed);
         a.SetTrigger("moving");
 
+        var currentTargetTile = tileMoveQueue[0];
+
         yield return new WaitForSeconds(0.0125f);
         for (int i = 0; i < tileMoveQueue.Count; i++)
         {
-            var currentTargetTile = tileMoveQueue[i];
-
+            
+            currentTargetTile = tileMoveQueue[i];
             while(Vector3.Distance(transform.position, currentTargetTile.GetPosition()) > 0.05f)
             {
                 transform.position = Vector3.MoveTowards(transform.position, currentTargetTile.GetPosition(), walkSpeed * Time.deltaTime);
@@ -143,7 +145,7 @@ public class BaseEnemy : MonoBehaviour
             yield return new WaitForSeconds(0.0025f);
             
         }
-
+        Debug.Log($"currentTargetTile at end of loop for {gameObject.name} is {currentTargetTile.name}");
         tileMoveQueue.Clear();
         ChangeState(EnemyState.Finished);
 

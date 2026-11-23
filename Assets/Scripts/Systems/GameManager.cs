@@ -21,8 +21,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int levelIndex = 0;
     [SerializeField] private bool resetLevelsOnLoad;
     [SerializeField] private ScriptableLevel levelToLoad;
-    public ScriptableLevel level => levelToLoad;
-    [SerializeField] private static List<ScriptableLevel> levels = new List<ScriptableLevel>();
+    public ScriptableLevel level => loadedLevels[levelIndex];
+    //[SerializeField] private static List<ScriptableLevel> levels = new List<ScriptableLevel>();
 
     private float gameTime;
     private float levelTime;
@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
     {
         
         Debug.Log($"Loading levelIndex {levelIndex}");
-        levels = Resources.LoadAll<ScriptableLevel>("Levels").ToList();
+        //levels = Resources.LoadAll<ScriptableLevel>("Levels").ToList();
         ChangeState(GameState.UserInputPhase);
     }
 
@@ -67,6 +67,8 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.PlayerPhase:
+                UIManager.Instance.EnableControlsUI(true);
+                UIManager.Instance.UpdateEnemiesOnTargetUI();
                 UIManager.Instance.UpdateBaitUI(GunManager.Instance.equippedBait, GunManager.Instance.lastBaitUsed);
                 GridManager.Instance.UpdateTileHighlights();
                 break;
@@ -77,6 +79,7 @@ public class GameManager : MonoBehaviour
             case GameState.ShootPhase:
                 
                 if(SettingsManager.Instance.mode == GameMode.Limited) { Tile.lastHoveredTile = Tile.hoveredTile; Tile.hoveredTile = Tile.goalTile; }
+                UIManager.Instance.UpdateLevelTitle(string.Empty);
                 UIManager.Instance.ResetBaitUI();
                 if (Tile.hoveredTile != null) { EnemyManager.Instance.KillEnemiesOnTile(Tile.hoveredTile); }
                 break;
@@ -135,7 +138,9 @@ public class GameManager : MonoBehaviour
         GunManager.Instance.lastBaitUsed = Axis.None;
         AudioManager.Instance.StopSound("bgm");
         ScoreManager.Instance.ResetAllValues();
-        UIManager.Instance.UpdateLevelTitle(loadedLevels[levelIndex].levelName);
+        GunManager.Instance.pullsInLevel = 0;
+        UIManager.Instance.UpdateBaitTextUI(GunManager.Instance.pullsInLevel);
+
         levelTime = 0;
         if(GameState != GameState.InitialiseLevel) { ChangeState(GameState.InitialiseLevel); }
         
@@ -145,27 +150,27 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
-    private ScriptableLevel GetLevelByName(string levelName)
-    {
-        foreach(ScriptableLevel level in levels)
-        {
-            if(level.name == levelName) return level;
-        }
+    //private ScriptableLevel GetLevelByName(string levelName)
+    //{
+    //    foreach(ScriptableLevel level in levels)
+    //    {
+    //        if(level.name == levelName) return level;
+    //    }
 
-        Debug.Log($"Could not find level of name: {levelName}");
-        return null;
-    }
+    //    Debug.Log($"Could not find level of name: {levelName}");
+    //    return null;
+    //}
 
-    private ScriptableLevel GetLevelByID(int levelID)
-    {
-        foreach (ScriptableLevel level in levels)
-        {
-            if (level.id == levelID) return level;
-        }
+    //private ScriptableLevel GetLevelByID(int levelID)
+    //{
+    //    foreach (ScriptableLevel level in levels)
+    //    {
+    //        if (level.id == levelID) return level;
+    //    }
 
-        Debug.Log($"Could not find level of ID: {levelID}");
-        return null;
-    }
+    //    Debug.Log($"Could not find level of ID: {levelID}");
+    //    return null;
+    //}
 }
 
 public enum GameState

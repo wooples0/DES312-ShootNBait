@@ -10,6 +10,8 @@ public class GunManager : MonoBehaviour
     public bool isGunEquipped;
     public Axis equippedBait;
     public Axis lastBaitUsed;
+
+    public int pullsInLevel;
     public bool lastBaitUsedIsEquipped
     {
         get
@@ -28,6 +30,7 @@ public class GunManager : MonoBehaviour
     {
         if (SettingsManager.Instance.mode == GameMode.Default) { isGunEquipped = true; }
         else { isGunEquipped = false; }
+        pullsInLevel = 0;
         equippedBait = Axis.Horizontal;
         lastBaitUsed = Axis.None;
         
@@ -56,19 +59,19 @@ public class GunManager : MonoBehaviour
         switch (equippedBait)
         {
             case Axis.Vertical:
-                equippedBait = -ctx.ReadValue<float>() > 0 ? Axis.DiagonalR : Axis.DiagonalL;
+                equippedBait = ctx.ReadValue<float>() > 0 ? Axis.DiagonalR : Axis.DiagonalL;
 
                 break;
             case Axis.Horizontal:
-                equippedBait = -ctx.ReadValue<float>() > 0 ? Axis.DiagonalL : Axis.DiagonalR;
+                equippedBait = ctx.ReadValue<float>() > 0 ? Axis.DiagonalL : Axis.DiagonalR;
 
                 break;
             case Axis.DiagonalR:
-                equippedBait = -ctx.ReadValue<float>() > 0 ? Axis.Horizontal : Axis.Vertical;
+                equippedBait = ctx.ReadValue<float>() > 0 ? Axis.Horizontal : Axis.Vertical;
 
                 break;
             case Axis.DiagonalL:
-                equippedBait = -ctx.ReadValue<float>() > 0 ? Axis.Vertical : Axis.Horizontal;
+                equippedBait = ctx.ReadValue<float>() > 0 ? Axis.Vertical : Axis.Horizontal;
 
                 break;
         }
@@ -116,6 +119,7 @@ public class GunManager : MonoBehaviour
                 }
             }
             if (enemyCount == 0) { AudioManager.Instance.PlaySound("wrong"); return; }
+            //TODO: cjheck if enemies CAN move and if they cant also do wrong sound and return
             OnBait();
         }
     }
@@ -135,9 +139,12 @@ public class GunManager : MonoBehaviour
     {
         AudioManager.Instance.PlayRandom(new string[] { "Powerup172", "Powerup174", "Powerup177" });
         ScoreManager.Instance.IncrementBaitUsed(1);
+
         GameManager.Instance.ChangeState(GameState.MovePhase);
         lastBaitUsed = equippedBait;
         UIManager.Instance.UpdateBaitUI(equippedBait, lastBaitUsed);
+        pullsInLevel += 1;
+        UIManager.Instance.UpdateBaitTextUI(pullsInLevel);
         StartCoroutine(EnemyManager.Instance.SetEnemiesOnTiles(Tile.hoveredTile, targetedTiles));
     }
 

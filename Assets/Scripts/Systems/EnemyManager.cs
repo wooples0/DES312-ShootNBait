@@ -6,6 +6,7 @@ using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Android;
 using UnityEngine.InputSystem;
 
 public class EnemyManager : MonoBehaviour
@@ -72,6 +73,7 @@ public class EnemyManager : MonoBehaviour
             }
             totalEnemiesInWave = spawnedEnemies.Count;
             AudioManager.Instance.PlaySound("spawn");
+            UIManager.Instance.UpdateLevelTitle(GameManager.Instance.level.levelName);
             yield return new WaitForSeconds(0.5f);
             AudioManager.Instance.PlaySound("bgm");
             GameManager.Instance.ChangeState(GameState.PlayerPhase);
@@ -93,7 +95,7 @@ public class EnemyManager : MonoBehaviour
     public IEnumerator SetEnemiesOnTiles(Tile targetTile, List<Tile> highlightedTiles)
     {
         List<BaseEnemy> enemiesToMove = new List<BaseEnemy>();
-        
+        Debug.Log("Starting coroutine");
         //Debug.Log($"No. of highlighted tiles: {highlightedTiles.Count}");
         foreach(BaseEnemy enemy in spawnedEnemies)
         {
@@ -112,7 +114,6 @@ public class EnemyManager : MonoBehaviour
 
         if (enemiesToMove.Count == 0)
         {
-            HideStackedEnemiesOnTile(targetTile);
             GameManager.Instance.ChangeState(GameState.PlayerPhase);
             yield break;
         }
@@ -132,15 +133,14 @@ public class EnemyManager : MonoBehaviour
             foreach (BaseEnemy enemy in enemiesToMove)
             {
                 allEnemiesMoved = true;
-                if(!enemy.IsFinishedMoving()) { allEnemiesMoved = false; }
-                yield return null;
+                if(!enemy.IsFinishedMoving()) { allEnemiesMoved = false; break; }
             }
             yield return null;
         }
 
-        HideStackedEnemiesOnTile(targetTile);
-        GameManager.Instance.ChangeState(GameState.PlayerPhase);
         yield return null;
+        HideStackedEnemiesInList(enemiesToMove);
+        GameManager.Instance.ChangeState(GameState.PlayerPhase);
     }
 
     public void KillEnemiesOnTile(Tile targetTile)
@@ -169,27 +169,30 @@ public class EnemyManager : MonoBehaviour
         GameManager.Instance.ChangeState(GameState.EndPhase);
     }
 
-    public void HideStackedEnemiesOnTile(Tile targetTile)
+    public void HideStackedEnemiesInList(List<BaseEnemy> enemyList)
     {
-        foreach (BaseEnemy enemy in targetTile.GetEnemiesOnTile())
+
+        var tilesWithEnemies = enemyList.Select(enemy => enemy.currentTile).Distinct();
+
+        foreach(Tile tile in tilesWithEnemies)
         {
-            if (enemy != targetTile.GetEnemiesOnTile()[0])
+            if(tile==null) continue;
+
+            var enemiesOnTile = tile.GetEnemiesOnTile();
+
+            for(int i = 0; i < enemiesOnTile.Count; i++)
             {
-                var renderers = enemy.gameObject.GetComponentsInChildren<MeshRenderer>();
-                foreach (var renderer in renderers)
+                var enemy = enemiesOnTile[i];
+                var renderers = enemy.GetComponentsInChildren<Renderer>();
+
+                foreach (Renderer renderer in renderers)
                 {
-                    renderer.enabled = false;
-                }
-            }
-            else
-            {
-                var renderers = enemy.gameObject.GetComponentsInChildren<MeshRenderer>();
-                foreach (var renderer in renderers)
-                {
+                    if (i != 0) { renderer.enabled = false; continue; }
                     renderer.enabled = true;
                 }
             }
         }
+        
     }
 
     public void OnDebug_SpawnEnemy(InputAction.CallbackContext ctx)

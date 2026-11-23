@@ -3,6 +3,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.UI;
 using Abertay.Analytics;
+using TMPEffects;
 
 public class UIManager : MonoBehaviour
 {
@@ -36,6 +37,13 @@ public class UIManager : MonoBehaviour
     [Header("Level Information UI")]
     [SerializeField] private TMP_Text levelTitle;
 
+    [Header("Player UI")]
+    [SerializeField] private Canvas controlsCanvas;
+    [SerializeField] private TMP_Text baitText;
+    private string baitDefaultText;
+    [SerializeField] private TMP_Text enemiesOnTargetText;
+    private string enemiesOnTargetDefaultText;
+
     [Header("User Input UI")]
     [SerializeField] private Canvas userInputCanvas;
     [SerializeField] private TMP_Text userInputTitle;
@@ -50,6 +58,8 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+        enemiesOnTargetDefaultText = enemiesOnTargetText.text;
+        baitDefaultText = baitText.text;
         EnableAllDebugUI(SettingsManager.Instance.debugEnabled);
         EnableUserInputScreen(SettingsManager.Instance.recordPlayerData);
         ResetBaitUI();
@@ -154,7 +164,10 @@ public class UIManager : MonoBehaviour
     {
         if (userInputCanvas != null) { userInputCanvas.gameObject.SetActive(val); }
     }
-
+    public void EnableControlsUI(bool val)
+    {
+        if(controlsCanvas != null) {  controlsCanvas.gameObject.SetActive(val); }
+    }
     public void OnConfirmUserInput()
     {
         if(userName == null || userName == string.Empty || userName == " ") return;
@@ -218,6 +231,16 @@ public class UIManager : MonoBehaviour
     public void UpdateLevelTitle(string newTitle)
     {
         levelTitle.text = newTitle;
+    }
+
+    public void UpdateEnemiesOnTargetUI()
+    {
+        enemiesOnTargetText.text = enemiesOnTargetDefaultText + Tile.goalTile.GetEnemiesOnTile().Count;
+    }
+
+    public void UpdateBaitTextUI(int pulls)
+    {
+        baitText.text = baitDefaultText + pulls;
     }
     public void ResetBaitUI()
     {
