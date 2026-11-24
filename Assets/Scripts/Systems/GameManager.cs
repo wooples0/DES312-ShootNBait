@@ -60,6 +60,8 @@ public class GameManager : MonoBehaviour
             case GameState.InitialiseLevel:
                 InitialiseLevel();
                 StartCoroutine(GridManager.Instance.GenerateGridFromLevel(loadedLevels[levelIndex]));
+                UIManager.Instance.EnableControlsUI(true);
+                UIManager.Instance.EnableAmmoUI(true);
                 break;
 
             case GameState.SpawnEnemies:
@@ -67,7 +69,7 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.PlayerPhase:
-                UIManager.Instance.EnableControlsUI(true);
+                
                 UIManager.Instance.UpdateEnemiesOnTargetUI();
                 UIManager.Instance.UpdateBaitUI(GunManager.Instance.equippedBait, GunManager.Instance.lastBaitUsed);
                 GridManager.Instance.UpdateTileHighlights();
@@ -91,6 +93,7 @@ public class GameManager : MonoBehaviour
                     if (SettingsManager.Instance.recordPlayerData) { RecordLevelAnalytics(); }
                     if (levelIndex < loadedLevels.Count - 1) { levelIndex++; }
                     else { levelIndex = 0; }
+
                     ChangeState(GameState.InitialiseLevel);
                 }
                 else
@@ -133,6 +136,8 @@ public class GameManager : MonoBehaviour
 
     public void InitialiseLevel()
     {
+        UIManager.Instance.EnableControlsUI(false);
+        UIManager.Instance.EnableAmmoUI(false);
         EnemyManager.Instance.ResetEnemyList();
         GridManager.Instance.ResetGrid();
         GunManager.Instance.lastBaitUsed = Axis.None;

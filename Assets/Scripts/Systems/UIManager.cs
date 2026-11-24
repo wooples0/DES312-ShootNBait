@@ -39,6 +39,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Player UI")]
     [SerializeField] private Canvas controlsCanvas;
+    [SerializeField] private Canvas ammoCanvas;
     [SerializeField] private TMP_Text baitText;
     private string baitDefaultText;
     [SerializeField] private TMP_Text enemiesOnTargetText;
@@ -60,6 +61,8 @@ public class UIManager : MonoBehaviour
     {
         enemiesOnTargetDefaultText = enemiesOnTargetText.text;
         baitDefaultText = baitText.text;
+        EnableControlsUI(false);
+        EnableAmmoUI(false);
         EnableAllDebugUI(SettingsManager.Instance.debugEnabled);
         EnableUserInputScreen(SettingsManager.Instance.recordPlayerData);
         ResetBaitUI();
@@ -167,6 +170,10 @@ public class UIManager : MonoBehaviour
     public void EnableControlsUI(bool val)
     {
         if(controlsCanvas != null) {  controlsCanvas.gameObject.SetActive(val); }
+    }
+    public void EnableAmmoUI(bool val)
+    {
+        if(controlsCanvas != null) { ammoCanvas.gameObject.SetActive(val); }
     }
     public void OnConfirmUserInput()
     {
