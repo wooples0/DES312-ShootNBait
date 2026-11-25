@@ -180,7 +180,7 @@ public abstract class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void ClearAllHighlightsOnTile()
     {
-        if (h_Crosshair != null) h_Crosshair.GetComponent<SpriteRenderer>().enabled = false;
+        if (h_Crosshair != null) h_Crosshair.GetComponentInChildren<SpriteRenderer>().enabled = false;
         if (h_Selected != null) h_Selected.SetActive(false);
         if (h_Arrows != null) h_Arrows.SetActive(false);
         if (h_Nope != null) h_Nope.SetActive(false);

@@ -69,7 +69,16 @@ public class GameManager : MonoBehaviour
                 break;
 
             case GameState.PlayerPhase:
-                
+                if (GridManager.Instance.AllEnemiesOnTargetTile()) 
+                { 
+                    //UIManager.Instance.spacebarPrompt.enabled = true;
+                    GridManager.Instance.markerRenderer.gameObject.GetComponent<Animator>().SetBool("enemiesInTarget", true);
+                }
+                else
+                {
+                    //if (UIManager.Instance.spacebarPrompt.enabled) { UIManager.Instance.spacebarPrompt.enabled = false; }
+                    GridManager.Instance.markerRenderer.gameObject.GetComponent<Animator>().SetBool("enemiesInTarget", false);
+                }
                 UIManager.Instance.UpdateEnemiesOnTargetUI();
                 UIManager.Instance.UpdateBaitUI(GunManager.Instance.equippedBait, GunManager.Instance.lastBaitUsed);
                 GridManager.Instance.UpdateTileHighlights();

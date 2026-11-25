@@ -81,7 +81,7 @@ public class EnemyManager : MonoBehaviour
         }
         if (SettingsManager.Instance.mode == GameMode.Limited)
         {
-            GameObject.Find("Highlight_Cross(Clone)").GetComponent<SpriteRenderer>().enabled = true;
+            GameObject.Find("Highlight_Cross(Clone)").GetComponentInChildren<SpriteRenderer>().enabled = true;
         }
         enemySpawnQueue.Clear();
         

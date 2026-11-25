@@ -11,6 +11,8 @@ public class GunManager : MonoBehaviour
     public Axis equippedBait;
     public Axis lastBaitUsed;
 
+    public Dictionary<Axis, int> axisAmmoCount;
+
     public int pullsInLevel;
     public bool lastBaitUsedIsEquipped
     {
@@ -35,7 +37,6 @@ public class GunManager : MonoBehaviour
         lastBaitUsed = Axis.None;
         
     }
-
     public void OnEquipGun(InputAction.CallbackContext ctx)
     {
         if (SettingsManager.Instance.mode == GameMode.Limited) { return; }

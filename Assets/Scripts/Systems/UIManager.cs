@@ -49,6 +49,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Canvas userInputCanvas;
     [SerializeField] private TMP_Text userInputTitle;
     [SerializeField] private TMP_InputField userInputField;
+    public Canvas spacebarPrompt;
     public string userName => userInputField.text;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

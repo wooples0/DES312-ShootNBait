@@ -11,6 +11,7 @@ public class GridManager : MonoBehaviour
     [SerializeField] private Tile groundTile, wallTile;
     [SerializeField] private Transform cam;
     [SerializeField] private GameObject circleMarker;
+    public SpriteRenderer markerRenderer;
 
     private Dictionary<Vector2, Tile> tiles = new Dictionary<Vector2, Tile>();
     private List<Tile> highlightedTiles = new List<Tile>();
@@ -144,6 +145,8 @@ public class GridManager : MonoBehaviour
                     Tile.goalTile = spawnedTile;
                     var marker = Instantiate(circleMarker, spawnPos, Quaternion.identity);
                     marker.transform.position += new Vector3(0, 0, -5);
+                    markerRenderer = marker.GetComponentInChildren<SpriteRenderer>();
+                    UIManager.Instance.spacebarPrompt = marker.GetComponentInChildren<Canvas>();
                 }
                 tiles[new Vector2((int)tileDataAtPosition.position.x, (int)tileDataAtPosition.position.y)] = spawnedTile;
             }
@@ -193,6 +196,10 @@ public class GridManager : MonoBehaviour
         cam.GetComponent<Camera>().orthographicSize = ((width + height) / 3.0f);
     }
 
+    public bool AllEnemiesOnTargetTile()
+    {
+        return Tile.goalTile.GetEnemiesOnTile().Count == EnemyManager.GetTotalEnemies();
+    }
     public Tile GetTileAtPosition(Vector2 pos)
     {
         if(tiles.TryGetValue(pos, out var tile))

@@ -1958,6 +1958,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8e8bdc882e8d3fa44842beaf9689152b, type: 2}
   - {fileID: 11400000, guid: e7bb8a3fce4779849973c6d0d87f886a, type: 2}
   - {fileID: 11400000, guid: 03da764576581f24c909e11b903ad402, type: 2}
+  - {fileID: 11400000, guid: 027ae0af09f446d4882f65dd0b6196d9, type: 2}
+  - {fileID: 11400000, guid: 02e0f6fb5cac8ab4593c629b51adfcc7, type: 2}
+  - {fileID: 11400000, guid: 4b54c58e494906145be6bb6805cd27bc, type: 2}
   levelIndex: 0
   resetLevelsOnLoad: 1
   levelToLoad: {fileID: 11400000, guid: 9d1cd264963e75b4297e82ffca0f350a, type: 2}
@@ -4997,6 +5000,7 @@ MonoBehaviour:
   wallTile: {fileID: 7883539262017628100, guid: d845670fdac239d41b4232c2bd952fd6, type: 3}
   cam: {fileID: 330585546}
   circleMarker: {fileID: 8823900662687349057, guid: 37b39d3d3a3a2ef44b5b4c8850763c0e, type: 3}
+  markerRenderer: {fileID: 0}
 --- !u!4 &911278298
 Transform:
   m_ObjectHideFlags: 0
@@ -5834,6 +5838,7 @@ MonoBehaviour:
   userInputCanvas: {fileID: 1907662337}
   userInputTitle: {fileID: 734298808}
   userInputField: {fileID: 991168451}
+  spacebarPrompt: {fileID: 0}
 --- !u!1 &1111409061
 GameObject:
   m_ObjectHideFlags: 0

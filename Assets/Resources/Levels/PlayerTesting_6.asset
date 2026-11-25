@@ -93,4 +93,4 @@ MonoBehaviour:
     type: 1
     noOfEnemiesOnTile: 1
   shootPositions: []
-  shootTilePosition: {x: 0, y: 0}
+  shootTilePosition: {x: 1, y: 3}
