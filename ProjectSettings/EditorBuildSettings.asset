@@ -8,5 +8,8 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Lvl_Main.unity
     guid: ad95b33729a08a84bbc55c7ed6523045
+  - enabled: 1
+    path: Assets/Scenes/Lvl_EndScreen.unity
+    guid: 61e50af993ca4e74b96e53669ce91055
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

@@ -101,9 +101,12 @@ public class GameManager : MonoBehaviour
                 {
                     if (SettingsManager.Instance.recordPlayerData) { RecordLevelAnalytics(); }
                     if (levelIndex < loadedLevels.Count - 1) { levelIndex++; }
-                    else { levelIndex = 0; }
+                    else
+                    {
+                        SceneManager.LoadScene(1);
+                    }
 
-                    ChangeState(GameState.InitialiseLevel);
+                        ChangeState(GameState.InitialiseLevel);
                 }
                 else
                 {
@@ -128,15 +131,16 @@ public class GameManager : MonoBehaviour
     {
         Dictionary<string, object> data = new Dictionary<string, object>();
 
-        data.Add("elapsedTotalTime", gameTime);
-        data.Add("elapsedLevelTime", levelTime);
-        data.Add("totalMovesPerformed", ScoreManager.Instance.baitUsed);
-
+        data.Add("Elapsed Total Time", gameTime);
+        data.Add("Elapsed Level Time", levelTime);
+        data.Add("Total Moves Performed", ScoreManager.Instance.baitUsed);
+        data.Add("Move List", GunManager.Instance.moveList);
         Debug.Log($"" +
             $"Recording data for [{loadedLevels[levelIndex]}" +
             $"\n\t\t\telapsedLevelTime: {gameTime}" +
             $"\n\t\t\telapsedLevelTime: {levelTime}" +
-            $"\n\t\t\ttotalMovesPerformed: {ScoreManager.Instance.baitUsed}"
+            $"\n\t\t\ttotalMovesPerformed: {ScoreManager.Instance.baitUsed}" +
+            $"\n\t\t\tmoveList: {GunManager.Instance.moveList}"
             );
 
         AnalyticsManager.SendCustomEvent(loadedLevels[levelIndex].levelName, data);
@@ -149,10 +153,9 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.EnableAmmoUI(false);
         EnemyManager.Instance.ResetEnemyList();
         GridManager.Instance.ResetGrid();
-        GunManager.Instance.lastBaitUsed = Axis.None;
+        GunManager.Instance.ResetValues();
         AudioManager.Instance.StopSound("bgm");
         ScoreManager.Instance.ResetAllValues();
-        GunManager.Instance.pullsInLevel = 0;
         UIManager.Instance.UpdateBaitTextUI(GunManager.Instance.pullsInLevel);
 
         levelTime = 0;

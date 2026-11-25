@@ -112,10 +112,6 @@ public class GridManager : MonoBehaviour
         width = level.width;
         height = level.height;
         var spawnDelay = level.width / 2 * 0.05f;
-        //Debug.Log($"Level {level.name}");
-        //Debug.Log($"Width {level.width}");
-        //Debug.Log($"Height {level.height}");
-        //Debug.Log($"List has {level.tileDataList.Count} tiles");
 
         CenterCameraOnGrid();
 
@@ -154,44 +150,13 @@ public class GridManager : MonoBehaviour
             yield return new WaitForSeconds(1f / Mathf.Pow(width, 0.9f));
         }
 
-        //foreach(Tile_Data data in level.tileDataList)
-        //{
-
-        //    var spawnPos = data.position;
-
-
-        //    var spawnedTile = Instantiate(data.type == TileType.Ground ? groundTile : wallTile, spawnPos, Quaternion.identity);
-            
-        //    if (data.noOfEnemiesOnTile > 0) { EnemyManager.AddEnemyToSpawnQueue(spawnedTile); }
-
-        //    string tilePrefix = data.type == TileType.Ground ? "[G]" : "[W]";
-        //    spawnedTile.name = $"{tilePrefix} Tile ({spawnPos.x}, {spawnPos.y})";
-        //    spawnedTile.Init((int)spawnPos.x, (int)spawnPos.y);
-        //    if (spawnPos == level.shootTilePosition && SettingsManager.Instance.mode == GameMode.Limited) 
-        //    {
-        //        Tile.goalTile = spawnedTile;
-        //        var marker = Instantiate(circleMarker, spawnPos, Quaternion.identity);
-        //        marker.transform.position += new Vector3(0, 0, -5);
-        //    }
-        //    tiles[new Vector2((int)spawnPos.x, (int)spawnPos.y)] = spawnedTile;
-
-            
-
-        //    yield return new WaitForSeconds(0.5f / (level.width * level.width));
-        //}
-
         GameManager.Instance.ChangeState(GameState.SpawnEnemies);
         yield return null;
     }
 
-    //public IEnumerator GeneratePremadeGrid(Dictionary<>)
-    //{
-
-    //}
     public void CenterCameraOnGrid()
     {
-        //cam.transform.position = new Vector3((float)width / 2 - 0.5f, (float)height / 2 - 0.5f, -10);
-        //cam.GetComponent<Camera>().orthographicSize = ((width + height) / 4.0f);
+        //centers camera in middle of grid nd then changes orthographic size based on a value i tweaked until it looked right
         cam.transform.position = new Vector3((float)width / 2 - 0.5f, (float)height / 2 - 0.39f + (height/10f), -10);
         cam.GetComponent<Camera>().orthographicSize = ((width + height) / 3.0f);
     }
@@ -248,7 +213,6 @@ public class GridManager : MonoBehaviour
         var startPos = tile.GetPosition();
         if(!tiles.TryGetValue(startPos, out var tileAtStartPos))
         {
-            //Debug.Log($"Specified target tile {startPos} not found in grid.");
             return null;
         }
         
@@ -259,7 +223,6 @@ public class GridManager : MonoBehaviour
                 var indexTile = GetTileAtPosition(new Vector2((int)startPos.x, i));
                 tilesToReturn.Add(indexTile);
             }
-            //Debug.Log($"{tilesToReturn.Count} tiles in horizontal");
             return tilesToReturn;
         }
         else if(axis == Axis.Horizontal)
@@ -269,7 +232,6 @@ public class GridManager : MonoBehaviour
                 var indexTile = GetTileAtPosition(new Vector2(i, (int)startPos.y));
                 tilesToReturn.Add(indexTile);
             }
-            //Debug.Log($"{tilesToReturn.Count} tiles in vertical");
             return tilesToReturn;
         }
         else if(axis == Axis.DiagonalL)
@@ -351,11 +313,8 @@ public class GridManager : MonoBehaviour
             var offsetX = startTilePosition.x > endTilePosition.x ? -1 : 1;
             var offsetY = startTilePosition.y > endTilePosition.y ? -1 : 1;
 
-            //Debug.Log($"Start tile is {startTile.name}");
-            //Debug.Log($"Attempting tile at {startTilePosition.x + offsetX}, {startTilePosition.y + offsetY}");
             var currentStepTile = GetTileAtPosition(new Vector2(startTilePosition.x + offsetX, startTilePosition.y + offsetY));
 
-            //Debug.Log($"Step tile name" + currentStepTile.name);
             while(currentStepTile != endTile)
             {
                 tilesBetween.Add(currentStepTile);
@@ -393,17 +352,6 @@ public class GridManager : MonoBehaviour
             }
         }
         highlightedTiles.Clear();
-        //highlightedTiles.Clear();
-        //foreach(var tile in tiles.Values)
-        //{
-        //    if(tile.TryGetComponent<GroundTile>(out var groundTile)){
-        //        groundTile.SetHighlight(HighlightType.Crosshair, false);
-        //        groundTile.SetHighlight(HighlightType.Selected, false);
-        //        groundTile.SetHighlight(HighlightType.Nope, false);
-        //        groundTile.SetHighlight(HighlightType.Arrows, false);
-        //    }
-
-        //}
     }
 
     public Tile GetRandomTile()

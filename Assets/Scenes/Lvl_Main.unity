@@ -6387,6 +6387,7 @@ MonoBehaviour:
   isGunEquipped: 0
   equippedBait: 0
   lastBaitUsed: 0
+  moveList: []
   pullsInLevel: 0
   targetedTiles: []
 --- !u!1 &1342810089

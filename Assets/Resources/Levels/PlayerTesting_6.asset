@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayerTesting_6
   m_EditorClassIdentifier: Assembly-CSharp::ScriptableLevel
   id: 0
-  levelName: 
+  levelName: LEVEL 6
   width: 5
   height: 5
   tileDataList:
